@@ -1,0 +1,10 @@
+# package: Anak Cryptography with Fractal Numeric Algorithm
+# author: Mario Rossano aka Anak, www.netlogicalab.com, www.netlogica.it; software@netlogicalab.com; software@netlogica.it
+# TEST FILE
+
+questa è una prova!
+E con questo qua Siamo su di un ritorno a capo?
+
+Ma certo
+
+Crypt

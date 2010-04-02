@@ -1,0 +1,75 @@
+Crypt-FNA
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc Crypt::FNA
+
+You can also look for information at:
+
+    RT, CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Crypt-FNA
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/Crypt-FNA
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/Crypt-FNA
+
+    Search CPAN
+        http://search.cpan.org/dist/Crypt-FNA/
+        
+    Algorithm description
+    	http://www.netlogicalab.com/fna/fna_articolo.htm
+  
+
+
+ERROR CODE
+
+	0 "Order of the curve is not correct.\nMust necessarily be numeric. Ex. r=7\n",
+	1 "Order of the curve must be a number greater than 0\n",
+	2 "Length Square container is incorrect. Must necessarily be numeric\n",
+	3 "Side of a square container fractal must be a number greater than 0\n",
+	5"Value of is not correct. Must necessarily be numeric.\nDefault loaded\n",
+	6 "The angle must be expressed in the system sessadecimal (ex. 126.35)\nDefault loaded\n",
+	7 "Error reading sub encrypt, package anakrypt: FNA\n",
+	8 "error writing file, package anakrypt: FNA sub encrypt\n",
+	9 "read error on sub decrypt myInput package Anakrypt: FNA\n",
+	10 "write error on sub decrypt MYOUTPUT package Anakrypt: FNA\n",
+	11 "error writing PNG sub draw_fract package Anakrypt: FNA\n",
+	12 "error background: only numeric character (RGB)\n\n",
+	13 "error background: only three number (RGB) from 0 to 255\n\n",
+	14 "error foreground: only numeric character (RGB)\n\n",
+	15 "error foreground: only three number (RGB) from 0 to 255\n\n",
+	16 "error loading GD::Simple, drawing aborted\n\n",
+	18 "error zoom: the value must be a number greater than zero.\n",
+	19 "errors during object instantiation.\n",
+	20 "error magic setting.\n",
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2009 Mario Rossano aka Anak
+birthday 05/08/1970; birthplace: Italy
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either:
+CC-NC-BY-SA
+license http://creativecommons.org/licenses/by-nc-sa/2.5/it/
+Creative Commons License: http://i.creativecommons.org/l/by-nc-sa/2.5/it/88x31.png
+FNA Fractal Numerical Algorithm for a new cryptography technology, author Mario Rossano
+is licensed under a:http://creativecommons.org/B/by-nc-sa/2.5/it/ - Creative Commons Attribuzione-Non commerciale-Condividi allo stesso modo 2.5 Italia License
+Permissions beyond the scope of this license may be available at software@netlogicalab.com
+
+
