@@ -354,4 +354,288 @@ use constant pi => 3.141592;
 	# fine function per identificazione direzioni genitore
 
 # end subroutine
+
 1;
+
+# POD SECTION
+
+=head1 NAME
+Crypt::FNA
+
+
+=head1 VERSION
+Version 0.01
+
+
+=head1 DESCRIPTION
+FNA stands for Fractal Numerical Algorithm, the symmetrical encryption method
+based on two algorithms that I developed for: 1. the 
+construction of a family of fractal curves (F) 2. a 
+encryption based on these curves. 
+
+A precise description of this algorithm is covered by Article 
+on http://www.perl.it/contest/2009 (forthcoming). A draft 
+is viewable from my site: http://www.netlogicalab.com/fna/fna_articolo.htm (in Italian, soon
+will publish an English translation)
+	
+
+=head1 CONSTRUCTOR
+  
+  my $krypto=FNA->new(
+    {
+       r=> '8',
+       angle =>  [56,-187,215,64],
+       square => 4096,
+       background => [255,255,255],
+       foreground => [0,0,0],
+       magic => 2
+    }
+  );
+  
+  my $krypto2=FNA->new();
+  
+
+=head2 ATTRIBUTE r
+Shows the depth in the calculation of the curve. It 's a number greater than zero, not
+necessarily integer. Indicated by the number of corners Ro basis of self-similar structure, the number of
+segments forming the curve is given by Ro ** r.
+
+Default value: 7
+
+
+=head2 ATTRIBUTE angle
+Are the angles covered by the recursion algorithm: these angles determines the basic structure
+self-similar curve (F). Angles are expressed in sessadecimale system, with values ranging from
+-360 And 360 (ie from 0 to 360).
+
+Default value: (56, -187, 215, -64)
+
+
+=head2 ATTRIBUTE square
+It 's the length of the side of a square container of the curve. Square has not only important for the
+(If any) graphical representation, but also for encryption, because it is used to calculate the
+length of the side of the curve (the square is proportional to ro r **)
+
+Default: 4096
+
+
+=head2 ATTRIBUTE background
+And 'the RGB color background PNG file containing the design curve. The notation is decimal, then with
+values ranging from 0 to 255.
+
+Default value: (255,255,255)
+
+
+=head2 ATTRIBUTE foreground
+And 'the RGB color tract in the PNG file containing the design curve. The notation is decimal, then
+with values ranging from 0 to 255.
+
+Default value: (0,0,0)
+
+
+=head2 ATTRIBUTE magic
+Indicates the number of vertices of the curve to be skipped during encryption and decryption: Since the algorithm, a
+continuous function on the top, skipping some, this is still on top of all the isolated points
+(Hence "fair").
+
+Default value: 3
+
+
+=head1 METHODS
+
+=head2 encrypt_file
+encrypt_file decrypt_file method and are the sum: make it useful by applying the mathematical
+curves (F). This method carries out a very precise: it encrypt the input file to output file.
+The syntax is:
+
+  
+  $Krypto-> encrypt_file($name_plain_file, $name_encrypted_file)
+  
+
+The input file of any format will be encrypt by the curve (F).
+
+=head2 decrypt_file
+The methods and decrypt_file encrypt_file, are summa: make it useful by applying the mathematical
+curves (F). This method carries out a very precise: it decrypt the input file (which is to
+encrypt_file output method) in the output file (which is the input method encrypt_file).
+
+The syntax is:
+
+  
+  $Krypto->decrypt_file ($name_encrypted_file, $name_decrypted_file)
+  
+
+The input file is read and decoded through the curve (F), the output file.
+
+=head2 encrypt_scalar
+The method encrypt_scalar digit strings: the result of encryption is a vector containing the cryptogram.
+The syntax is:
+  
+  @encrypted_scalar=krypto->encrypt_scalar($this_scalar)
+  
+
+Crypt::FNA does not implement, at present, a method for decrypting the encrypted scalar. Anyway, with a little hack, you can decipher even scalars
+using the decrypt_file the scalar and writing to a file in volatile memory (we can avoid the file system call to do this).
+
+See examples (inserted in fnatest.pl):
+
+=head2 make_fract
+This method is undoubtedly the most impressive and allows you to "touch" the curves that will be applied in cryptographic algorithms.
+For the programmer can be useful in your application, show the curve, for example, a hypothetical control panel for managing passwords or
+encrypted files in an attachment to forms sent by email and stored on the server.
+
+The graphic file output format is PNG (Portable Network Graphic), accessible from any browser by as many different graphics software.
+
+The syntax is:
+
+  
+  $Krypto->make_fract($pngfile, $zoom)
+  
+
+1. $Pngfile is the name of the png files - without extension "PNG" is inserted automatically
+2. $Zoom the drawing scale - greater than zero. Default value: 1
+
+The image produced is contained in the square of side $square.
+
+
+=head1 EXAMPLES
+=head2 making FNA object
+
+  
+    my $krypto=FNA->new(
+      {
+        r=> '8',
+        angle =>  [56,-187,215,64],
+        square => 4096,
+        background => [255,255,255],
+        foreground => [0,0,0],
+        magic => 2
+      }
+   );
+   
+  my $krypto2=FNA->new();
+  
+
+=head2 draw a fractal curve of {F}
+
+  
+  $krypto->make_fract('fractal1',1);
+  
+
+=head2 file's encryption
+
+  
+  $krypto->encrypt_file('test.txt','test.fna');
+  
+
+=head2 file's decryption
+
+  
+  $krypto->decrypt_file('test.fna','test_rebuild.txt');
+  
+
+=head2 hyperencryption
+
+  
+  $krypto->encrypt_file('test.txt','test2.fna');
+    $krypto2->encrypt_file('test2.fna','test3.fna');
+    $krypto2->decrypt_file('test3.fna','test2_rebuild.fna');
+  $krypto->decrypt_file('test2_rebuild.fna','test3_rebuild.txt');
+  
+  
+=head2 scalar encryption
+
+  
+  my @encrypted_scalar=$krypto->encrypt_scalar('questa è una prova');
+  for(@encrypted_scalar) {print $_."\n"}
+  
+
+=head2 hack scalar decryption
+
+  
+  # Hack reconstruction string
+    # Encryption of a string
+      my $stringa_in_chiaro = 'this is a test';
+      my @encrypted_scalar = $Krypto->encrypt_scalar($stringa_in_chiaro);
+      for (@encrypted_scalar) {print $ _. "\ n"}
+ 
+    # Hack reconstruction string
+      my ($fh_testo_criptato, $file_criptato);
+      $fh_testo_criptato open, '>', \ $ file_criptato or die "error writing file in memory \ n";
+        for (@encrypted_scalar) {print $ fh_testo_criptato $ _. "\ n"}
+      close $ fh_testo_criptato;
+      my ($fh_testo_decriptato, $stringa_decriptata);
+      $Krypto- decrypt_file (\$file_criptato, \$stringa_decriptata);
+  # End Hack
+  
+
+$Stringa_decriptata contains the clear string value
+
+=head2 reading error code
+
+  
+  $krypto->make_fract("fractal3","3a"); # nome file png e zoom
+  my @errors=@{$krypto->message};
+  foreach my $errors(@errors) {
+    print "> 1-".$errors."\n"
+  }
+  @errors=@{$krypto2->message};
+  foreach my $errors(@errors) {
+    print "> 2-".$errors."\n"
+  }
+  
+=head2 error code
+
+0 "Order of the curve is not correct.\nMust necessarily be numeric. Ex. r=7",
+1 "Order of the curve must be a number greater than 0",
+2 "Length Square container is incorrect. Must necessarily be numeric",
+3 "Side of a square container fractal must be a number greater than 0",
+5"Value of is not correct. Must necessarily be numeric.\nDefault loaded",
+6 "The angle must be expressed in the system sessadecimal (ex. 126.35) Default loaded",
+7 "Error reading sub encrypt, package anakrypt: FNA",
+8 "error writing file, package anakrypt: FNA sub encrypt",
+9 "read error on sub decrypt myInput package Anakrypt: FNA",
+10 "write error on sub decrypt MYOUTPUT package Anakrypt: FNA",
+11 "error writing PNG sub draw_fract package Anakrypt: FNA",
+12 "error background: only numeric character (RGB)",
+13 "error background: only three number (RGB) from 0 to 255",
+14 "error foreground: only numeric character (RGB)",
+15 "error foreground: only three number (RGB) from 0 to 255",
+16 "error loading GD::Simple, drawing aborted",
+18 "error zoom: the value must be a number greater than zero.",
+19 "errors during object instantiation.",
+20 "error magic setting.",
+
+=head1 AUTHOR
+Mario Rossano
+software@netlogicalab.com
+software@netlogica.it
+www.netlogicalab.com
+skype: anak_the_wolf
+
+=head1 BUGS
+Please, send me your alerts to software@netlogica.it
+
+=head1 SUPPORT
+Write me :) software@netlogica.it
+
+
+=head1 COPYRIGHT & LICENSE
+FNA by Mario Rossano, http://www.netlogicalab.com
+
+This pod text by Mario Rossano
+
+Copyright (C) 2009 Mario Rossano aka Anak
+birthday 05/08/1970; birthplace: Italy
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either:
+CC-NC-BY-SA
+license http://creativecommons.org/licenses/by-nc-sa/2.5/it/
+Creative Commons License: http://i.creativecommons.org/l/by-nc-sa/2.5/it/88x31.png
+
+FNA Fractal Numerical Algorithm for a new cryptography technology, author Mario Rossano
+is licensed under a: http://creativecommons.org/B/by-nc-sa/2.5/it/ - Creative Commons Attribuzione-Non commerciale-Condividi allo stesso modo 2.5 Italia License
+
+Permissions beyond the scope of this license may be available at software@netlogicalab.com
+
