@@ -22,7 +22,7 @@ package FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.01';
+our $VERSION =  '0.02';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -360,23 +360,22 @@ use constant pi => 3.141592;
 # POD SECTION
 
 =head1 NAME
+
 Crypt::FNA
 
-
 =head1 VERSION
-Version 0.01
 
+Version 0.02
 
 =head1 DESCRIPTION
+
 FNA stands for Fractal Numerical Algorithm, the symmetrical encryption method
 based on two algorithms that I developed for: 1. the 
 construction of a family of fractal curves (F) 2. a 
 encryption based on these curves. 
 
 A precise description of this algorithm is covered by Article 
-on http://www.perl.it/contest/2009 (forthcoming). A draft 
-is viewable from my site: http://www.netlogicalab.com/fna/fna_articolo.htm (in Italian, soon
-will publish an English translation)
+on http://www.perl.it/contest/2009 (soon publish).
 	
 
 =head1 CONSTRUCTOR
@@ -394,56 +393,56 @@ will publish an English translation)
   
   my $krypto2=FNA->new();
   
-
 =head2 ATTRIBUTE r
+
 Shows the depth in the calculation of the curve. It 's a number greater than zero, not
 necessarily integer. Indicated by the number of corners Ro basis of self-similar structure, the number of
 segments forming the curve is given by Ro ** r.
 
 Default value: 7
 
-
 =head2 ATTRIBUTE angle
+
 Are the angles covered by the recursion algorithm: these angles determines the basic structure
 self-similar curve (F). Angles are expressed in sessadecimale system, with values ranging from
 -360 And 360 (ie from 0 to 360).
 
 Default value: (56, -187, 215, -64)
 
-
 =head2 ATTRIBUTE square
+
 It 's the length of the side of a square container of the curve. Square has not only important for the
 (If any) graphical representation, but also for encryption, because it is used to calculate the
 length of the side of the curve (the square is proportional to ro r **)
 
 Default: 4096
 
-
 =head2 ATTRIBUTE background
+
 And 'the RGB color background PNG file containing the design curve. The notation is decimal, then with
 values ranging from 0 to 255.
 
 Default value: (255,255,255)
 
-
 =head2 ATTRIBUTE foreground
+
 And 'the RGB color tract in the PNG file containing the design curve. The notation is decimal, then
 with values ranging from 0 to 255.
 
 Default value: (0,0,0)
 
-
 =head2 ATTRIBUTE magic
+
 Indicates the number of vertices of the curve to be skipped during encryption and decryption: Since the algorithm, a
 continuous function on the top, skipping some, this is still on top of all the isolated points
 (Hence "fair").
 
 Default value: 3
 
-
 =head1 METHODS
 
 =head2 encrypt_file
+
 encrypt_file decrypt_file method and are the sum: make it useful by applying the mathematical
 curves (F). This method carries out a very precise: it encrypt the input file to output file.
 The syntax is:
@@ -455,6 +454,7 @@ The syntax is:
 The input file of any format will be encrypt by the curve (F).
 
 =head2 decrypt_file
+
 The methods and decrypt_file encrypt_file, are summa: make it useful by applying the mathematical
 curves (F). This method carries out a very precise: it decrypt the input file (which is to
 encrypt_file output method) in the output file (which is the input method encrypt_file).
@@ -468,6 +468,7 @@ The syntax is:
 The input file is read and decoded through the curve (F), the output file.
 
 =head2 encrypt_scalar
+
 The method encrypt_scalar digit strings: the result of encryption is a vector containing the cryptogram.
 The syntax is:
   
@@ -480,6 +481,7 @@ using the decrypt_file the scalar and writing to a file in volatile memory (we c
 See examples (inserted in fnatest.pl):
 
 =head2 make_fract
+
 This method is undoubtedly the most impressive and allows you to "touch" the curves that will be applied in cryptographic algorithms.
 For the programmer can be useful in your application, show the curve, for example, a hypothetical control panel for managing passwords or
 encrypted files in an attachment to forms sent by email and stored on the server.
@@ -492,13 +494,14 @@ The syntax is:
   $Krypto->make_fract($pngfile, $zoom)
   
 
-1. $Pngfile is the name of the png files - without extension "PNG" is inserted automatically
-2. $Zoom the drawing scale - greater than zero. Default value: 1
+1. $pngfile is the name of the png files - without extension "PNG" is inserted automatically
+2. $zoom the drawing scale - greater than zero. Default value: 1
 
 The image produced is contained in the square of side $square.
 
 
 =head1 EXAMPLES
+
 =head2 making FNA object
 
   
@@ -569,7 +572,7 @@ The image produced is contained in the square of side $square.
   # End Hack
   
 
-$Stringa_decriptata contains the clear string value
+$stringa_decriptata contains the clear string value
 
 =head2 reading error code
 
@@ -586,27 +589,28 @@ $Stringa_decriptata contains the clear string value
   
 =head2 error code
 
-0 "Order of the curve is not correct.\nMust necessarily be numeric. Ex. r=7",
-1 "Order of the curve must be a number greater than 0",
-2 "Length Square container is incorrect. Must necessarily be numeric",
-3 "Side of a square container fractal must be a number greater than 0",
-5"Value of is not correct. Must necessarily be numeric.\nDefault loaded",
-6 "The angle must be expressed in the system sessadecimal (ex. 126.35) Default loaded",
-7 "Error reading sub encrypt, package anakrypt: FNA",
-8 "error writing file, package anakrypt: FNA sub encrypt",
-9 "read error on sub decrypt myInput package Anakrypt: FNA",
-10 "write error on sub decrypt MYOUTPUT package Anakrypt: FNA",
-11 "error writing PNG sub draw_fract package Anakrypt: FNA",
-12 "error background: only numeric character (RGB)",
-13 "error background: only three number (RGB) from 0 to 255",
-14 "error foreground: only numeric character (RGB)",
-15 "error foreground: only three number (RGB) from 0 to 255",
-16 "error loading GD::Simple, drawing aborted",
-18 "error zoom: the value must be a number greater than zero.",
-19 "errors during object instantiation.",
-20 "error magic setting.",
+0 Order of the curve is not correct.\nMust necessarily be numeric. Ex. r=7
+1 Order of the curve must be a number greater than 0
+2 Length Square container is incorrect. Must necessarily be numeric
+3 Side of a square container fractal must be a number greater than 0
+5 Value of is not correct. Must necessarily be numeric.Default loaded
+6 The angle must be expressed in the system sessadecimal (ex. 126.35) Default loaded
+7 Error reading sub encrypt, package Crypt: FNA
+8 error writing file, package Crypt: FNA sub encrypt
+9 read error on sub decrypt myInput package Crypt: FNA
+10 write error on sub decrypt MYOUTPUT package Crypt: FNA
+11 error writing PNG sub draw_fract package Crypt: FNA
+12 error background: only numeric character (RGB)
+13 error background: only three number (RGB) from 0 to 255
+14 error foreground: only numeric character (RGB)
+15 error foreground: only three number (RGB) from 0 to 255
+16 error loading GD::Simple, drawing aborted
+18 error zoom: the value must be a number greater than zero
+19 errors during object instantiation
+20 error magic setting
 
 =head1 AUTHOR
+
 Mario Rossano
 software@netlogicalab.com
 software@netlogica.it
@@ -614,13 +618,16 @@ www.netlogicalab.com
 skype: anak_the_wolf
 
 =head1 BUGS
+
 Please, send me your alerts to software@netlogica.it
 
 =head1 SUPPORT
+
 Write me :) software@netlogica.it
 
 
 =head1 COPYRIGHT & LICENSE
+
 FNA by Mario Rossano, http://www.netlogicalab.com
 
 This pod text by Mario Rossano
