@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.03';
+our $VERSION =  '0.04';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -365,7 +365,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =head1 DESCRIPTION
 
@@ -565,11 +565,11 @@ The image produced is contained in the square of side $square.
  
     # Hack reconstruction string
       my ($fh_testo_criptato, $file_criptato);
-      $fh_testo_criptato open, '>', \ $ file_criptato or die "error writing file in memory \ n";
-        for (@encrypted_scalar) {print $ fh_testo_criptato $ _. "\ n"}
-      close $ fh_testo_criptato;
+      $fh_testo_criptato open, '>', \$file_criptato or die "error writing file in memory\n";
+        for (@encrypted_scalar) {print $fh_testo_criptato $_. "\n"}
+      close $fh_testo_criptato;
       my ($fh_testo_decriptato, $stringa_decriptata);
-      $krypto- decrypt_file (\$file_criptato, \$stringa_decriptata);
+      $krypto->decrypt_file(\$file_criptato, \$stringa_decriptata);
   # End Hack
   
 

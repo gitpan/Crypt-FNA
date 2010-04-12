@@ -3,3 +3,15 @@ Revision history for Crypt-FNA
 0.01    16/03/2010/23:26
         First version, released on an unsuspecting world.
 
+0.02    09/04/2010 9:55
+        Correct text of POD
+        
+0.03    09/04/2010 12:55
+        Correct text of POD Crypt::FNA
+        Add POD to Crypt::FNA::Validation
+        Add Version to Crypt::FNA::Validation
+        Add t/01-add.t
+        
+0.04    09/04/2010 12:55
+	Modified abstract in build.pl
+        Correct text of readme
