@@ -1,0 +1,22 @@
+---
+name: Crypt-FNA
+version: 0.03
+author:
+  - 'Mario Rossano aka Anak <software@netlogicalab.com>'
+abstract: 'Installation utility for a Crypt::FNA ver 0.03 - Fractal Numerical Algorithm by Mario Rossano aka Anak - http://www.netlogicalab.com - software@netlogicalab.com'
+license: perl
+build_requires:
+  Test::More: 0
+generated_by: Module::Build version 0.33
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+provides:
+  Crypt::FNA:
+    file: lib/Crypt/FNA.pm
+    version: 0.03
+  Crypt::FNA::Validation:
+    file: lib/Crypt/FNA/Validation.pm
+    version: 0.01
+resources:
+  license: http://dev.perl.org/licenses/

@@ -14,7 +14,7 @@
 # is licensed under a:http://creativecommons.org/B/by-nc-sa/2.5/it/ - Creative Commons Attribuzione-Non commerciale-Condividi allo stesso modo 2.5 Italia License
 # Permissions beyond the scope of this license may be available at software@netlogicalab.com
 
-package FNA;
+package Crypt::FNA;
 
 # caricamento lib
 	use strict;
@@ -22,7 +22,7 @@ package FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.02';
+our $VERSION =  '0.03';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -365,7 +365,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =head1 DESCRIPTION
 
@@ -380,7 +380,7 @@ on http://www.perl.it/contest/2009 (soon publish).
 
 =head1 CONSTRUCTOR
   
-  my $krypto=FNA->new(
+  my $krypto=Crypt::FNA->new(
     {
        r=> '8',
        angle =>  [56,-187,215,64],
@@ -391,8 +391,9 @@ on http://www.perl.it/contest/2009 (soon publish).
     }
   );
   
-  my $krypto2=FNA->new();
-  
+  my $krypto2=Crypt::FNA->new();
+
+
 =head2 ATTRIBUTE r
 
 Shows the depth in the calculation of the curve. It 's a number greater than zero, not
@@ -448,7 +449,7 @@ curves (F). This method carries out a very precise: it encrypt the input file to
 The syntax is:
 
   
-  $Krypto-> encrypt_file($name_plain_file, $name_encrypted_file)
+  $krypto-> encrypt_file($name_plain_file, $name_encrypted_file)
   
 
 The input file of any format will be encrypt by the curve (F).
@@ -462,7 +463,7 @@ encrypt_file output method) in the output file (which is the input method encryp
 The syntax is:
 
   
-  $Krypto->decrypt_file ($name_encrypted_file, $name_decrypted_file)
+  $krypto->decrypt_file ($name_encrypted_file, $name_decrypted_file)
   
 
 The input file is read and decoded through the curve (F), the output file.
@@ -478,7 +479,7 @@ The syntax is:
 Crypt::FNA does not implement, at present, a method for decrypting the encrypted scalar. Anyway, with a little hack, you can decipher even scalars
 using the decrypt_file the scalar and writing to a file in volatile memory (we can avoid the file system call to do this).
 
-See examples (inserted in fnatest.pl):
+See examples
 
 =head2 make_fract
 
@@ -491,7 +492,7 @@ The graphic file output format is PNG (Portable Network Graphic), accessible fro
 The syntax is:
 
   
-  $Krypto->make_fract($pngfile, $zoom)
+  $krypto->make_fract($pngfile, $zoom)
   
 
 1. $pngfile is the name of the png files - without extension "PNG" is inserted automatically
@@ -545,7 +546,7 @@ The image produced is contained in the square of side $square.
     $krypto2->decrypt_file('test3.fna','test2_rebuild.fna');
   $krypto->decrypt_file('test2_rebuild.fna','test3_rebuild.txt');
   
-  
+
 =head2 scalar encryption
 
   
@@ -559,7 +560,7 @@ The image produced is contained in the square of side $square.
   # Hack reconstruction string
     # Encryption of a string
       my $stringa_in_chiaro = 'this is a test';
-      my @encrypted_scalar = $Krypto->encrypt_scalar($stringa_in_chiaro);
+      my @encrypted_scalar = $krypto->encrypt_scalar($stringa_in_chiaro);
       for (@encrypted_scalar) {print $ _. "\ n"}
  
     # Hack reconstruction string
@@ -568,11 +569,12 @@ The image produced is contained in the square of side $square.
         for (@encrypted_scalar) {print $ fh_testo_criptato $ _. "\ n"}
       close $ fh_testo_criptato;
       my ($fh_testo_decriptato, $stringa_decriptata);
-      $Krypto- decrypt_file (\$file_criptato, \$stringa_decriptata);
+      $krypto- decrypt_file (\$file_criptato, \$stringa_decriptata);
   # End Hack
   
 
 $stringa_decriptata contains the clear string value
+
 
 =head2 reading error code
 
@@ -586,36 +588,36 @@ $stringa_decriptata contains the clear string value
   foreach my $errors(@errors) {
     print "> 2-".$errors."\n"
   }
-  
+
+
 =head2 error code
 
-0 Order of the curve is not correct.\nMust necessarily be numeric. Ex. r=7
-1 Order of the curve must be a number greater than 0
-2 Length Square container is incorrect. Must necessarily be numeric
-3 Side of a square container fractal must be a number greater than 0
-5 Value of is not correct. Must necessarily be numeric.Default loaded
-6 The angle must be expressed in the system sessadecimal (ex. 126.35) Default loaded
-7 Error reading sub encrypt, package Crypt: FNA
-8 error writing file, package Crypt: FNA sub encrypt
-9 read error on sub decrypt myInput package Crypt: FNA
-10 write error on sub decrypt MYOUTPUT package Crypt: FNA
-11 error writing PNG sub draw_fract package Crypt: FNA
-12 error background: only numeric character (RGB)
-13 error background: only three number (RGB) from 0 to 255
-14 error foreground: only numeric character (RGB)
-15 error foreground: only three number (RGB) from 0 to 255
-16 error loading GD::Simple, drawing aborted
-18 error zoom: the value must be a number greater than zero
-19 errors during object instantiation
-20 error magic setting
+  0 Order of the curve is not correct. Must necessarily be numeric. Ex. r=7
+  1 Order of the curve must be a number greater than 0
+  2 Length Square container is incorrect. Must necessarily be numeric
+  3 Side of a square container fractal must be a number greater than 0
+  5 Value of is not correct. Must necessarily be numeric.Default loaded
+  6 The angle must be expressed in the system sessadecimal (ex. 126.35) Default loaded
+  7 Error reading sub encrypt, package Crypt::FNA
+  8 error writing file, package Crypt::FNA sub encrypt
+  9 read error on sub decrypt myInput package Crypt::FNA
+  10 write error on sub decrypt MYOUTPUT package Crypt::FNA
+  11 error writing PNG sub draw_fract package Crypt::FNA
+  12 error background: only numeric character (RGB)
+  13 error background: only three number (RGB) from 0 to 255
+  14 error foreground: only numeric character (RGB)
+  15 error foreground: only three number (RGB) from 0 to 255
+  16 error loading GD::Simple, drawing aborted
+  18 error zoom: the value must be a number greater than zero
+  19 errors during object instantiation
+  20 error magic setting
 
 =head1 AUTHOR
 
-Mario Rossano
-software@netlogicalab.com
-software@netlogica.it
-www.netlogicalab.com
-skype: anak_the_wolf
+  Mario Rossano
+  software@netlogicalab.com
+  software@netlogica.it
+  http://www.netlogicalab.com
 
 =head1 BUGS
 

@@ -18,6 +18,7 @@ package Crypt::FNA::Validation;
 
 	use strict;
 	use warnings;
+	our $VERSION =  '0.01';
 
 	my $fna_default_values= (
 		{
@@ -163,3 +164,52 @@ package Crypt::FNA::Validation;
 		return @{@{$self->intercept}[1]->{message}}
 	}
 1;
+
+# POD SECTION
+
+=head1 NAME
+
+Crypt::FNA::Validation
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 DESCRIPTION
+
+Crypt::FNA::Validation is a service package for FNA object validation in FNA.pm
+
+=head1 AUTHOR
+
+  Mario Rossano
+  software@netlogicalab.com
+  software@netlogica.it
+  http://www.netlogicalab.com
+
+=head1 BUGS
+
+Please, send me your alerts to software@netlogica.it
+
+=head1 SUPPORT
+
+Write me :) software@netlogica.it
+
+=head1 COPYRIGHT & LICENSE
+
+FNA by Mario Rossano, http://www.netlogicalab.com
+
+This pod text by Mario Rossano
+
+Copyright (C) 2009 Mario Rossano aka Anak
+birthday 05/08/1970; birthplace: Italy
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either:
+CC-NC-BY-SA
+license http://creativecommons.org/licenses/by-nc-sa/2.5/it/
+Creative Commons License: http://i.creativecommons.org/l/by-nc-sa/2.5/it/88x31.png
+
+FNA Fractal Numerical Algorithm for a new cryptography technology, author Mario Rossano
+is licensed under a: http://creativecommons.org/B/by-nc-sa/2.5/it/ - Creative Commons Attribuzione-Non commerciale-Condividi allo stesso modo 2.5 Italia License
+
+Permissions beyond the scope of this license may be available at software@netlogicalab.com
