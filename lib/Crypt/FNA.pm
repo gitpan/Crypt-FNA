@@ -7,11 +7,11 @@
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of either:
-# CC-NC-BY-SA
-# license http://creativecommons.org/licenses/by-nc-sa/2.5/it/
+# CC-NC-BY-SA 
+# license http://creativecommons.org/licenses/by-nc-sa/2.5/it/deed.en
 # Creative Commons License: http://i.creativecommons.org/l/by-nc-sa/2.5/it/88x31.png
 # FNA Fractal Numerical Algorithm for a new cryptography technology, author Mario Rossano
-# is licensed under a:http://creativecommons.org/B/by-nc-sa/2.5/it/ - Creative Commons Attribuzione-Non commerciale-Condividi allo stesso modo 2.5 Italia License
+# is licensed under a: http://creativecommons.org/B/by-nc-sa/2.5/it/deed.en - Creative Commons Attribution-Noncommercial-Share Alike 2.5 Italy License
 # Permissions beyond the scope of this license may be available at software@netlogicalab.com
 
 package Crypt::FNA;
@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.04';
+our $VERSION =  '0.05';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -365,7 +365,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =head1 DESCRIPTION
 
@@ -378,7 +378,7 @@ A precise description of this algorithm is covered by Article
 on http://www.perl.it/contest/2009 (soon publish).
 	
 
-=head1 CONSTRUCTOR
+=head1 CONSTRUCTOR METHOD new
   
   my $krypto=Crypt::FNA->new(
     {
@@ -398,14 +398,14 @@ on http://www.perl.it/contest/2009 (soon publish).
 
 Shows the depth in the calculation of the curve. It 's a number greater than zero, not
 necessarily integer. Indicated by the number of corners Ro basis of self-similar structure, the number of
-segments forming the curve is given by Ro ** r.
+segments forming the curve is given by Ro**r.
 
 Default value: 7
 
 =head2 ATTRIBUTE angle
 
 Are the angles covered by the recursion algorithm: these angles determines the basic structure
-self-similar curve (F). Angles are expressed in sessadecimale system, with values ranging from
+self-similar curve (F). Angles are expressed in sessadecimal system, with values ranging from
 -360 And 360 (ie from 0 to 360).
 
 Default value: (56, -187, 215, -64)
@@ -590,7 +590,7 @@ $stringa_decriptata contains the clear string value
   }
 
 
-=head2 error code
+=head2 error code -> message
 
   0 Order of the curve is not correct. Must necessarily be numeric. Ex. r=7
   1 Order of the curve must be a number greater than 0
@@ -611,6 +611,151 @@ $stringa_decriptata contains the clear string value
   18 error zoom: the value must be a number greater than zero
   19 errors during object instantiation
   20 error magic setting
+
+
+=head1 INTERNAL METHODS AND FUNCTIONS
+
+
+=head2 set_starting_angle
+
+The first we meet is "set_starting_angle" which, as already briefly mentioned, the system converts radiant angles passed from parent script, initializing the object (new method). Besides this method returns the number of angles under the curve (F), $ ro, data necessary to calculate otherwise be lost during the population of $ self-> angle than the carrier that re-initializes initial_angle @ $ self-> angle at the end of processing
+
+
+=head2 init_geometry
+
+Calculates the length of the side of the curve (F). This distance is used both in the processes of encryption (encrypt_file and encrypt_scalar) that reconstruction of the data ("decrypt_file"), as well as the drawing method (make_fract). The side of the curve, also as the distance traveled by the turtle in the design phase is a fundamental and structural, since they directly affect the coordinates of the vertices used by the various class methods FNA.
+
+
+=head2 crypt_fract
+
+Is invoked by all methods (not "new") and calls the fundamental "evaluate_this_angle" as well as "evaluate_this_coords, calculating the angles and coordinates of the curve of its vertices. It 'a real ring junction in the recursive process.
+
+
+=head2 evaluate_this_angle
+
+calculates the angle of the segment k-th of the {F} curve
+
+
+=head2 g
+
+see Theory
+
+
+=head2 p
+
+see Theory
+
+
+=head1 THEORY
+
+
+=head2 Definition of the set of curves {F}
+
+Briefly, indicating therefore: 
+
+  Ro  -> number of parameters of the base (4 in the case of the Koch curve) 
+  r   -> the order of the curve 
+  ann -> number of direction of the segments of the curve of order n 
+
+We can establish that the number of directions (n) curve of order n is: 
+
+  ann = Ro**r 
+
+Here now the directions of various orders in a building in a triangle: 
+
+  r=0                               0 
+  r=1                         0, 60, -60, 0 
+  r=2  0, 60, -60, 0, 60, 120, 0, 60, -60, 0, -120, -60, 0, 60, -60, 0 
+
+
+Reminds you of something? Note the similarity with the construction of the triangle Tartaglia: 
+
+     1 
+    1 1 
+   1 2 1 
+  1 3 3 1 
+ 1 4 6 4 1 
+
+This triangle shows the triangular arrangement of binomial coefficients, ie the development of the binomial coefficients (a + b) raised to any exponent n. 
+
+The thing that interests us is that any number of the triangle is obtained as the sum of the two corresponding to the top line: note that we can express the properties of self-similarity of the Koch curve through a similar construction, combining the values of the base and then with those derived from the combination and so on iterating the procedure. 
+
+In this case, an ex. Ro = 4, we have this situation: 
+
+  row for r = 0 -> 0 + 0 = 0 
+  row for r = 1 -> 0 + 0 = 0 0 + 60 = 60, 0 to 60 = -60, 0 + 0 = 0 
+  row for r = 2 -> 
+
+  I.     0+0=0     0+60=60    0-60=-60    0+0=0 
+  II.   60+0=60   60+60=120  60-60=0     60+0=60 
+  III. -60+0=-60 -60+60=0   -60-60=-120 -60+0=-60 
+  IV.    0+0=0     0+60=60    0-60=-60    0+0=0
+
+Repeating the procedure, we obtain precisely the angles of the curve of order n.
+
+However, appear to identify the corners of the curve of order n is still necessary to identify all those angles with order <n 
+We continue to see, writing a succession of directions as the elements of a vector: 
+
+  a(0) = a(0) + a(0) 
+  a(1) = a(0) + a(1)    GROUP I 
+  a(2) = a(0) + a(2) 
+  a(3) = a(0) + a(3) 
+  ------------------------------
+  a(4) = a(1) + a(0) 
+  a(5) = a(1) + a(1)    GROUP II 
+  a(6) = a(1) + a(2) 
+  a(7) = a(1) + a(3) 
+  ------------------------------
+  a(8) = a(2) + a(0) 
+  a(9) = a(2) + a(1)    GROUP III 
+  a(10)= a(2) + a(2) 
+  a(11)= a(2) + a(3) 
+  ------------------------------
+  a(12)= a(3) + a(0) 
+  a(13)= a(3) + a(1)    GROUP IV 
+  a(14)= a(3) + a(2) 
+  a(15)= a(3) + a(3) 
+
+
+Thus we have the summations to identify the different angles of segments approximating the curve ... written reports in this way, we can clearly see the properties of the two addends that provide the angle n-th: 
+
+The first addendum is the group or the branch on which we iterate the construction.
+The second term is the location of which we are calculating in that branch.
+
+The group that the k-th direction so we can indicate in the formalism of Perl: 
+
+  G(k) = int(k/ro) 
+
+The location of the k-th direction its group is: 
+
+  P(k) = k-int(k/Ro) = k*G(k) 
+
+Ultimately, the value of the k-th direction will be:
+
+  a(k) = a(G(k)) + a(P(k)) (1) 
+
+We note that this report is general, independent of the number of basic parameters of the curve. In one of Koch have a base of cardinality equal to 4 but is not necessarily so. 
+With this relationship becomes straightforward to derive the graph of the curve, being able to calculate the angles at a certain order and then implementing a system of turtle for use: 
+
+  while ($k<$Ro**$r) {
+      $a[$k] = $a[int($k/$Ro)] + $a[$k-int($k/$Ro)]; 
+      $K++ 
+  }
+
+Then we indicate with {F} the set of curves whose directions the segments are obtained by approximating the equation (1).
+{F} has a Hausdorff dimension between 1 and 2 (with small variations can be calculated even those with size less than 1, as Cantor dust) and infinite cardinality as easily detected by observing the number of parameters possible parent. 
+ 
+In short:
+
+=head2 encrypt to {F}
+
+Each byte is encrypted using the coordinates of the top of fractal curve, obtained starting from the next than previously estimated, jumping a further number of vertices equal to the magic number plus the value of bytes to encrypt.
+
+=head2 decrypt from {F}
+
+Follow the curve occurring fractal, from vertex to vertex, that the coordinates match those of the cryptogram. The value of the original byte is reconstructed having counted how many vertices have succeeded to get two values of equality, equality last met. The number of vertices, reduced the magic number added to the unit, represents the value of the n-th byte.
+
+
 
 =head1 AUTHOR
 
@@ -640,11 +785,10 @@ birthday 05/08/1970; birthplace: Italy
 This program is free software; you can redistribute it and/or modify it
 under the terms of either:
 CC-NC-BY-SA
-license http://creativecommons.org/licenses/by-nc-sa/2.5/it/
+license http://creativecommons.org/licenses/by-nc-sa/2.5/it/deed.en
 Creative Commons License: http://i.creativecommons.org/l/by-nc-sa/2.5/it/88x31.png
 
 FNA Fractal Numerical Algorithm for a new cryptography technology, author Mario Rossano
-is licensed under a: http://creativecommons.org/B/by-nc-sa/2.5/it/ - Creative Commons Attribuzione-Non commerciale-Condividi allo stesso modo 2.5 Italia License
+is licensed under a: http://creativecommons.org/B/by-nc-sa/2.5/it/deed.en - Creative Commons Attribution-Noncommercial-Share Alike 2.5 Italy License
 
 Permissions beyond the scope of this license may be available at software@netlogicalab.com
-

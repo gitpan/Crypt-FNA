@@ -7,11 +7,11 @@
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of either:
-# CC-NC-BY-SA
-# license http://creativecommons.org/licenses/by-nc-sa/2.5/it/
+# CC-NC-BY-SA 
+# license http://creativecommons.org/licenses/by-nc-sa/2.5/it/deed.en
 # Creative Commons License: http://i.creativecommons.org/l/by-nc-sa/2.5/it/88x31.png
 # FNA Fractal Numerical Algorithm for a new cryptography technology, author Mario Rossano
-# is licensed under a:http://creativecommons.org/B/by-nc-sa/2.5/it/ - Creative Commons Attribuzione-Non commerciale-Condividi allo stesso modo 2.5 Italia License
+# is licensed under a: http://creativecommons.org/B/by-nc-sa/2.5/it/deed.en - Creative Commons Attribution-Noncommercial-Share Alike 2.5 Italy License
 # Permissions beyond the scope of this license may be available at software@netlogicalab.com
 
 package Crypt::FNA::Validation;
@@ -171,13 +171,44 @@ package Crypt::FNA::Validation;
 
 Crypt::FNA::Validation
 
+
 =head1 VERSION
 
 Version 0.01
 
+
 =head1 DESCRIPTION
 
 Crypt::FNA::Validation is a service package for FNA object validation in FNA.pm
+
+
+=head1 METHODS
+
+
+=head2 new
+
+Make a 'validation' object (used in fna.pm)
+
+
+=head2 intercept
+
+Intercept and validate Crypt::FNA attribute or method
+
+
+=head2 method_new_fna
+
+Validate Crypt::FNA 'new' method
+
+
+=head2 open_file
+
+Validate Crypt::FNA 'open' instruction
+
+
+=head2 param_zoom_fna
+
+Validate Crypt::FNA param 'zoom' for drawing fractal curve
+
 
 =head1 AUTHOR
 
@@ -186,13 +217,16 @@ Crypt::FNA::Validation is a service package for FNA object validation in FNA.pm
   software@netlogica.it
   http://www.netlogicalab.com
 
+
 =head1 BUGS
 
 Please, send me your alerts to software@netlogica.it
 
+
 =head1 SUPPORT
 
 Write me :) software@netlogica.it
+
 
 =head1 COPYRIGHT & LICENSE
 
@@ -206,10 +240,10 @@ birthday 05/08/1970; birthplace: Italy
 This program is free software; you can redistribute it and/or modify it
 under the terms of either:
 CC-NC-BY-SA
-license http://creativecommons.org/licenses/by-nc-sa/2.5/it/
+license http://creativecommons.org/licenses/by-nc-sa/2.5/it/deed.en
 Creative Commons License: http://i.creativecommons.org/l/by-nc-sa/2.5/it/88x31.png
 
 FNA Fractal Numerical Algorithm for a new cryptography technology, author Mario Rossano
-is licensed under a: http://creativecommons.org/B/by-nc-sa/2.5/it/ - Creative Commons Attribuzione-Non commerciale-Condividi allo stesso modo 2.5 Italia License
+is licensed under a: http://creativecommons.org/B/by-nc-sa/2.5/it/deed.en - Creative Commons Attribution-Noncommercial-Share Alike 2.5 Italy License
 
 Permissions beyond the scope of this license may be available at software@netlogicalab.com
