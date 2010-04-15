@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.05';
+our $VERSION =  '0.06';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -365,7 +365,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =head1 DESCRIPTION
 
@@ -378,7 +378,7 @@ A precise description of this algorithm is covered by Article
 on http://www.perl.it/contest/2009 (soon publish).
 	
 
-=head1 CONSTRUCTOR METHOD new
+=head1 CONSTRUCTOR METHOD
   
   my $krypto=Crypt::FNA->new(
     {
@@ -442,6 +442,12 @@ Default value: 3
 
 =head1 METHODS
 
+
+=head2 new
+
+See CONSTRUCTOR METHOD
+
+
 =head2 encrypt_file
 
 encrypt_file decrypt_file method and are the sum: make it useful by applying the mathematical
@@ -449,7 +455,7 @@ curves (F). This method carries out a very precise: it encrypt the input file to
 The syntax is:
 
   
-  $krypto-> encrypt_file($name_plain_file, $name_encrypted_file)
+  $krypto->encrypt_file($name_plain_file, $name_encrypted_file)
   
 
 The input file of any format will be encrypt by the curve (F).
@@ -463,7 +469,7 @@ encrypt_file output method) in the output file (which is the input method encryp
 The syntax is:
 
   
-  $krypto->decrypt_file ($name_encrypted_file, $name_decrypted_file)
+  $krypto->decrypt_file($name_encrypted_file, $name_decrypted_file)
   
 
 The input file is read and decoded through the curve (F), the output file.
@@ -473,7 +479,7 @@ The input file is read and decoded through the curve (F), the output file.
 The method encrypt_scalar digit strings: the result of encryption is a vector containing the cryptogram.
 The syntax is:
   
-  @encrypted_scalar=krypto->encrypt_scalar($this_scalar)
+  @encrypted_scalar=$krypto->encrypt_scalar($this_scalar)
   
 
 Crypt::FNA does not implement, at present, a method for decrypting the encrypted scalar. Anyway, with a little hack, you can decipher even scalars
@@ -561,12 +567,12 @@ The image produced is contained in the square of side $square.
     # Encryption of a string
       my $stringa_in_chiaro = 'this is a test';
       my @encrypted_scalar = $krypto->encrypt_scalar($stringa_in_chiaro);
-      for (@encrypted_scalar) {print $ _. "\ n"}
+      for (@encrypted_scalar) {print $_."\ n"}
  
     # Hack reconstruction string
       my ($fh_testo_criptato, $file_criptato);
       $fh_testo_criptato open, '>', \$file_criptato or die "error writing file in memory\n";
-        for (@encrypted_scalar) {print $fh_testo_criptato $_. "\n"}
+        for (@encrypted_scalar) {print $fh_testo_criptato $_."\n"}
       close $fh_testo_criptato;
       my ($fh_testo_decriptato, $stringa_decriptata);
       $krypto->decrypt_file(\$file_criptato, \$stringa_decriptata);
@@ -634,6 +640,11 @@ Is invoked by all methods (not "new") and calls the fundamental "evaluate_this_a
 =head2 evaluate_this_angle
 
 calculates the angle of the segment k-th of the {F} curve
+
+
+=head2 evaluate_this_coords
+
+calculates the X and Y of the vertex k-th of the {F} curve
 
 
 =head2 g
