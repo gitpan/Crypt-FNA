@@ -31,7 +31,7 @@ You can also look for information at:
         http://search.cpan.org/dist/Crypt-FNA/
         
     Algorithm description
-    	http://www.netlogicalab.com/fna/fna_articolo.htm
+    	http://www.perl.it/documenti/articoli/2010/04/anakryptfna.html
   
 
 
@@ -60,7 +60,7 @@ ERROR CODE
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2009 Mario Rossano aka Anak
+Copyright (C) 2009 2010 Mario Rossano aka Anak
 birthday 05/08/1970; birthplace: Italy
 
 This program is free software; you can redistribute it and/or modify it

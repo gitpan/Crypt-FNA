@@ -3,7 +3,7 @@
 # birthday 05/08/1970; birthplace: Italy
 # LIBRARY FILE
 
-# Copyright (C) 2009 Mario Rossano aka Anak
+# Copyright (C) 2009,2010 Mario Rossano aka Anak
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of either:
@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.06';
+our $VERSION =  '0.10';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -260,6 +260,25 @@ use constant pi => 3.141592;
 		@{$self->angle}=@initial_angle
 	}
 
+	sub decrypt_scalar {
+		my $self=shift;
+		my @encrypted_scalar=@_;
+
+		# hack ricostruzione stringa 
+		
+			my ($fh_testo_criptato,$file_criptato);
+			open $fh_testo_criptato, '>',\$file_criptato or die "$_\n";
+				for (@encrypted_scalar) {print $fh_testo_criptato $_."\n"}
+			close $fh_testo_criptato;
+
+			my ($fh_testo_decriptato,$stringa_decriptata);
+			$self->decrypt_file(\$file_criptato,\$stringa_decriptata);
+	
+		# end
+
+		return ($stringa_decriptata)
+	}
+
 	sub crypt_fract {
 		my $self=shift;
 		my $ro=shift;
@@ -365,7 +384,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.06
+Version 0.10
 
 =head1 DESCRIPTION
 
@@ -375,7 +394,7 @@ construction of a family of fractal curves (F) 2. a
 encryption based on these curves. 
 
 A precise description of this algorithm is covered by Article 
-on http://www.perl.it/contest/2009 (soon publish).
+on http://www.perl.it/documenti/articoli/2010/04/anakryptfna.html
 	
 
 =head1 CONSTRUCTOR METHOD
@@ -478,14 +497,21 @@ The input file is read and decoded through the curve (F), the output file.
 
 The method encrypt_scalar digit strings: the result of encryption is a vector containing the cryptogram.
 The syntax is:
+
   
   @encrypted_scalar=$krypto->encrypt_scalar($this_scalar)
+
   
-
-Crypt::FNA does not implement, at present, a method for decrypting the encrypted scalar. Anyway, with a little hack, you can decipher even scalars
-using the decrypt_file the scalar and writing to a file in volatile memory (we can avoid the file system call to do this).
-
 See examples
+
+=head2 decrypt_scalar
+
+The method decrypt_scalar make a plain string from the encrypted array returned from encrypt_scalar method: the result of decryption is a scalar containing plain value.
+The syntax is:
+
+  
+  @decrypted_scalar=$krypto->decrypt_scalar(@encrypted_scalar)
+  
 
 =head2 make_fract
 
@@ -558,29 +584,12 @@ The image produced is contained in the square of side $square.
   
   my @encrypted_scalar=$krypto->encrypt_scalar('questa è una prova');
   for(@encrypted_scalar) {print $_."\n"}
+
+=head2 scalar decryption
+
   
-
-=head2 hack scalar decryption
-
-  
-  # Hack reconstruction string
-    # Encryption of a string
-      my $stringa_in_chiaro = 'this is a test';
-      my @encrypted_scalar = $krypto->encrypt_scalar($stringa_in_chiaro);
-      for (@encrypted_scalar) {print $_."\ n"}
- 
-    # Hack reconstruction string
-      my ($fh_testo_criptato, $file_criptato);
-      $fh_testo_criptato open, '>', \$file_criptato or die "error writing file in memory\n";
-        for (@encrypted_scalar) {print $fh_testo_criptato $_."\n"}
-      close $fh_testo_criptato;
-      my ($fh_testo_decriptato, $stringa_decriptata);
-      $krypto->decrypt_file(\$file_criptato, \$stringa_decriptata);
-  # End Hack
-  
-
-$stringa_decriptata contains the clear string value
-
+  my $decrypted_scalar=$krypto->decrypt_scalar(@encrypted_scalar);
+  print $decrypted_scalar;
 
 =head2 reading error code
 
