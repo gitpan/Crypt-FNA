@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.10';
+our $VERSION =  '0.11';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -106,7 +106,7 @@ use constant pi => 3.141592;
 		(my $ro,my @initial_angle)=$self->set_starting_angle();
 		(my $nx,my $ny,my $di)=$self->init_geometry($ro);
 
-		my $load_this_package=eval("require GD::SIMPLE;");
+		my $load_this_package=eval("require GD::Simple;");
 		$load_this_package.='';
 		if ($load_this_package eq '') {
 			push(@{$self->{message}},16);
@@ -384,7 +384,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.10
+Version 0.11
 
 =head1 DESCRIPTION
 

@@ -22,7 +22,7 @@
 
 # --- MakeMaker const_config section:
 
-# These definitions are from config.sh (via C:/Perl/lib/Config.pm).
+# These definitions are from config.sh (via C:/programmi/Perl/lib/Config.pm).
 # They may have been overridden via Makefile.PL or on the command line.
 AR = lib
 CC = cl
@@ -33,16 +33,16 @@ DLSRC = dl_win32.xs
 EXE_EXT = .exe
 FULL_AR = 
 LD = link
-LDDLFLAGS = -dll -nologo -nodefaultlib -debug -opt:ref,icf  -libpath:"C:\Perl\lib\CORE"  -machine:x86
-LDFLAGS = -nologo -nodefaultlib -debug -opt:ref,icf  -libpath:"C:\Perl\lib\CORE"  -machine:x86
+LDDLFLAGS = -dll -nologo -nodefaultlib -debug -opt:ref,icf  -libpath:"C:\programmi\Perl\lib\CORE"  -machine:x86
+LDFLAGS = -nologo -nodefaultlib -debug -opt:ref,icf  -libpath:"C:\programmi\Perl\lib\CORE"  -machine:x86
 LIBC = msvcrt.lib
 LIB_EXT = .lib
 OBJ_EXT = .obj
 OSNAME = MSWin32
 OSVERS = 5.00
 RANLIB = rem
-SITELIBEXP = C:\Perl\site\lib
-SITEARCHEXP = C:\Perl\site\lib
+SITELIBEXP = C:\programmi\Perl\site\lib
+SITEARCHEXP = C:\programmi\Perl\site\lib
 SO = dll
 VENDORARCHEXP = 
 VENDORLIBEXP = 
@@ -54,11 +54,11 @@ DIRFILESEP = ^\
 DFSEP = $(DIRFILESEP)
 NAME = Crypt::FNA
 NAME_SYM = Crypt_FNA
-VERSION = 0.10
+VERSION = 0.11
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_10
+VERSION_SYM = 0_11
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.10
+XS_VERSION = 0.11
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib\arch
@@ -73,61 +73,61 @@ MAN3EXT = 3
 INSTALLDIRS = site
 DESTDIR = 
 PREFIX = $(SITEPREFIX)
-PERLPREFIX = C:\Perl
-SITEPREFIX = C:\Perl\site
+PERLPREFIX = C:\programmi\Perl
+SITEPREFIX = C:\programmi\Perl\site
 VENDORPREFIX = 
-INSTALLPRIVLIB = C:\Perl\lib
+INSTALLPRIVLIB = C:\programmi\Perl\lib
 DESTINSTALLPRIVLIB = $(DESTDIR)$(INSTALLPRIVLIB)
-INSTALLSITELIB = C:\Perl\site\lib
+INSTALLSITELIB = C:\programmi\Perl\site\lib
 DESTINSTALLSITELIB = $(DESTDIR)$(INSTALLSITELIB)
 INSTALLVENDORLIB = 
 DESTINSTALLVENDORLIB = $(DESTDIR)$(INSTALLVENDORLIB)
-INSTALLARCHLIB = C:\Perl\lib
+INSTALLARCHLIB = C:\programmi\Perl\lib
 DESTINSTALLARCHLIB = $(DESTDIR)$(INSTALLARCHLIB)
-INSTALLSITEARCH = C:\Perl\site\lib
+INSTALLSITEARCH = C:\programmi\Perl\site\lib
 DESTINSTALLSITEARCH = $(DESTDIR)$(INSTALLSITEARCH)
 INSTALLVENDORARCH = 
 DESTINSTALLVENDORARCH = $(DESTDIR)$(INSTALLVENDORARCH)
-INSTALLBIN = C:\Perl\bin
+INSTALLBIN = C:\programmi\Perl\bin
 DESTINSTALLBIN = $(DESTDIR)$(INSTALLBIN)
-INSTALLSITEBIN = C:\Perl\site\bin
+INSTALLSITEBIN = C:\programmi\Perl\site\bin
 DESTINSTALLSITEBIN = $(DESTDIR)$(INSTALLSITEBIN)
 INSTALLVENDORBIN = 
 DESTINSTALLVENDORBIN = $(DESTDIR)$(INSTALLVENDORBIN)
-INSTALLSCRIPT = C:\Perl\bin
+INSTALLSCRIPT = C:\programmi\Perl\bin
 DESTINSTALLSCRIPT = $(DESTDIR)$(INSTALLSCRIPT)
-INSTALLSITESCRIPT = C:\Perl\site\bin
+INSTALLSITESCRIPT = C:\programmi\Perl\site\bin
 DESTINSTALLSITESCRIPT = $(DESTDIR)$(INSTALLSITESCRIPT)
 INSTALLVENDORSCRIPT = 
 DESTINSTALLVENDORSCRIPT = $(DESTDIR)$(INSTALLVENDORSCRIPT)
-INSTALLMAN1DIR = C:\Perl\man\man1
+INSTALLMAN1DIR = C:\programmi\Perl\man\man1
 DESTINSTALLMAN1DIR = $(DESTDIR)$(INSTALLMAN1DIR)
 INSTALLSITEMAN1DIR = $(INSTALLMAN1DIR)
 DESTINSTALLSITEMAN1DIR = $(DESTDIR)$(INSTALLSITEMAN1DIR)
 INSTALLVENDORMAN1DIR = 
 DESTINSTALLVENDORMAN1DIR = $(DESTDIR)$(INSTALLVENDORMAN1DIR)
-INSTALLMAN3DIR = C:\Perl\man\man3
+INSTALLMAN3DIR = C:\programmi\Perl\man\man3
 DESTINSTALLMAN3DIR = $(DESTDIR)$(INSTALLMAN3DIR)
 INSTALLSITEMAN3DIR = $(INSTALLMAN3DIR)
 DESTINSTALLSITEMAN3DIR = $(DESTDIR)$(INSTALLSITEMAN3DIR)
 INSTALLVENDORMAN3DIR = 
 DESTINSTALLVENDORMAN3DIR = $(DESTDIR)$(INSTALLVENDORMAN3DIR)
-INSTALLHTMLDIR = C:\Perl\html
+INSTALLHTMLDIR = C:\programmi\Perl\html
 DESTINSTALLHTMLDIR = $(DESTDIR)$(INSTALLHTMLDIR)
-INSTALLSITEHTMLDIR = C:\Perl\html
+INSTALLSITEHTMLDIR = C:\programmi\Perl\html
 DESTINSTALLSITEHTMLDIR = $(DESTDIR)$(INSTALLSITEHTMLDIR)
-INSTALLVENDORHTMLDIR = C:\Perl\html
+INSTALLVENDORHTMLDIR = C:\programmi\Perl\html
 DESTINSTALLVENDORHTMLDIR = $(DESTDIR)$(INSTALLVENDORHTMLDIR)
-PERL_LIB = C:\Perl\lib
-PERL_ARCHLIB = C:\Perl\lib
+PERL_LIB = C:\programmi\Perl\lib
+PERL_ARCHLIB = C:\programmi\Perl\lib
 LIBPERL_A = libperl.lib
 FIRST_MAKEFILE = Makefile
 MAKEFILE_OLD = Makefile.old
 MAKE_APERL_FILE = Makefile.aperl
 PERLMAINCC = $(CC)
-PERL_INC = C:\Perl\lib\CORE
-PERL = C:\Perl\bin\perl.exe
-FULLPERL = C:\Perl\bin\perl.exe
+PERL_INC = C:\programmi\Perl\lib\CORE
+PERL = C:\programmi\Perl\bin\perl.exe
+FULLPERL = C:\programmi\Perl\bin\perl.exe
 ABSPERL = $(PERL)
 PERLRUN = $(PERL)
 FULLPERLRUN = $(FULLPERL)
@@ -139,7 +139,7 @@ PERL_CORE = 0
 PERM_RW = 644
 PERM_RWX = 755
 
-MAKEMAKER   = C:/Perl/lib/ExtUtils/MakeMaker.pm
+MAKEMAKER   = C:/programmi/Perl/lib/ExtUtils/MakeMaker.pm
 MM_VERSION  = 6.4801
 MM_REVISION = 64801
 
@@ -258,7 +258,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Crypt-FNA
-DISTVNAME = Crypt-FNA-0.10
+DISTVNAME = Crypt-FNA-0.11
 
 
 # --- MakeMaker macro section:
@@ -494,7 +494,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) Generating META.yml
 	$(NOECHO) $(ECHO) "--- #YAML:1.0" > META_new.yml
 	$(NOECHO) $(ECHO) "name:               Crypt-FNA" >> META_new.yml
-	$(NOECHO) $(ECHO) "version:            0.10" >> META_new.yml
+	$(NOECHO) $(ECHO) "version:            0.11" >> META_new.yml
 	$(NOECHO) $(ECHO) "abstract:           ~" >> META_new.yml
 	$(NOECHO) $(ECHO) "author:  []" >> META_new.yml
 	$(NOECHO) $(ECHO) "license:            unknown" >> META_new.yml
@@ -773,7 +773,7 @@ $(FIRST_MAKEFILE) : Makefile.PL $(CONFIGDEP)
 
 # --- MakeMaker makeaperl section ---
 MAP_TARGET    = perl
-FULLPERL      = C:\Perl\bin\perl.exe
+FULLPERL      = C:\programmi\Perl\bin\perl.exe
 
 $(MAP_TARGET) :: static $(MAKE_APERL_FILE)
 	$(MAKE) $(USEMAKEFILE) $(MAKE_APERL_FILE) $@
@@ -817,7 +817,7 @@ testdb_static :: testdb_dynamic
 # --- MakeMaker ppd section:
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
-	$(NOECHO) $(ECHO) "<SOFTPKG NAME=\"$(DISTNAME)\" VERSION=\"0,10,0,0\">" > $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) "<SOFTPKG NAME=\"$(DISTNAME)\" VERSION=\"0,11,0,0\">" > $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) "    <TITLE>$(DISTNAME)</TITLE>" >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) "    <ABSTRACT></ABSTRACT>" >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) "    <AUTHOR></AUTHOR>" >> $(DISTNAME).ppd
