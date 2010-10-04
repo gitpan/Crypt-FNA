@@ -54,11 +54,11 @@ DIRFILESEP = ^\
 DFSEP = $(DIRFILESEP)
 NAME = Crypt::FNA
 NAME_SYM = Crypt_FNA
-VERSION = 0.11
+VERSION = 0.12
 VERSION_MACRO = VERSION
 VERSION_SYM = 0_11
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.11
+XS_VERSION = 0.12
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib\arch
@@ -258,7 +258,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Crypt-FNA
-DISTVNAME = Crypt-FNA-0.11
+DISTVNAME = Crypt-FNA-0.12
 
 
 # --- MakeMaker macro section:
@@ -494,7 +494,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) Generating META.yml
 	$(NOECHO) $(ECHO) "--- #YAML:1.0" > META_new.yml
 	$(NOECHO) $(ECHO) "name:               Crypt-FNA" >> META_new.yml
-	$(NOECHO) $(ECHO) "version:            0.11" >> META_new.yml
+	$(NOECHO) $(ECHO) "version:            0.12" >> META_new.yml
 	$(NOECHO) $(ECHO) "abstract:           ~" >> META_new.yml
 	$(NOECHO) $(ECHO) "author:  []" >> META_new.yml
 	$(NOECHO) $(ECHO) "license:            unknown" >> META_new.yml

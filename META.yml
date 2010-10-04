@@ -14,7 +14,7 @@ meta-spec:
 provides:
   Crypt::FNA:
     file: lib/Crypt/FNA.pm
-    version: 0.11
+    version: 0.12
   Crypt::FNA::Validation:
     file: lib/Crypt/FNA/Validation.pm
     version: 0.01
