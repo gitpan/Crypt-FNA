@@ -18,7 +18,7 @@ package Crypt::FNA::Validation;
 
 	use strict;
 	use warnings;
-	our $VERSION =  '0.01';
+	our $VERSION =  '0.02';
 
 	my $fna_default_values= (
 		{
@@ -28,7 +28,8 @@ package Crypt::FNA::Validation;
 			background => [255,255,255],
 			foreground => [0,0,0],
 			magic => 3,
-			zoom => 2
+			zoom => 2,
+			salted => 'false',
 		}
 	);
 	
@@ -135,9 +136,19 @@ package Crypt::FNA::Validation;
 		if ($self->intercept->magic eq "") {
 			$self->intercept->{magic}=$fna_default_values->{magic}
 		} else {
-			if ($self->intercept->magic=~/[^0-9]/) {
+			if (!($self->intercept->magic=~/^[0-9]$/)) {
 				push(@error_messages,20);
 				$self->intercept->{magic}=$fna_default_values->{magic}
+			}
+		}
+
+		$self->intercept->{salted}.="";
+		if ($self->intercept->salted eq "") {
+			$self->intercept->{salted}=$fna_default_values->{salted}
+		} else {
+			if (!($self->intercept->salted=~/^(true|false)$/i)) {
+				push(@error_messages,21);
+				$self->intercept->{salted}=$fna_default_values->{salted}
 			}
 		}
 		
@@ -174,7 +185,7 @@ Crypt::FNA::Validation
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 
 =head1 DESCRIPTION

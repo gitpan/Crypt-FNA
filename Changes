@@ -1,14 +1,21 @@
 Revision history for Crypt-FNA
 
+0.24    03/12/2010 17:01
+	Added 'salted' attribute
+	Added 'make_salt' - internal - method
+	Modified POD text
+	Added control on validation.pm (rev. 0.02) to verify attribute 'salted' is a boolean
+	Updated array of message error (code 21): salted initialization  error (only true | false)
+
 0.12    27/09/2010 13:30
 	Modified s/GD::SIMPLE/GD::Simple/ 
 
 0.10    26/07/2010 16:13
-	Added method decrypt_scalar
-	Added POD information for decrypt_scalar method
+	Added method 'decrypt_scalar'
+	Added POD information for 'decrypt_scalar' method
 
 0.06    15/04/2010 11:05
-	Added POD information for new method of Crypt::FNA
+	Added POD information for 'new' method of Crypt::FNA
 
 0.05    14/04/2010 11:05
 	Add more information to Crypt::FNA POD

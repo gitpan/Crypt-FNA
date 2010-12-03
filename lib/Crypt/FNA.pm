@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.12';
+our $VERSION =  '0.24';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -41,6 +41,7 @@ use constant pi => 3.141592;
 		$self->foreground($init->{foreground});
 		$self->magic($init->{magic});
 		$self->message($init->{message});
+		$self->salted($init->{salted});
 
 		my $validate=Crypt::FNA::Validation->new({intercept => $self});
 		$validate->method_new_fna($self);
@@ -97,6 +98,14 @@ use constant pi => 3.141592;
 			}
 			return $self->{message}
 		}
+		sub salted {
+			my $self=shift;
+			if (@_) {
+				$self->{salted}=shift
+			}
+			return $self->{salted}
+		}
+
 	
 	sub make_fract {
 		my $self=shift;
@@ -120,8 +129,8 @@ use constant pi => 3.141592;
 
 		my $img = GD::Simple->new($self->square,$self->square);
 			$img->fgcolor(@{$self->background});	 			# foreground
-			$img->bgcolor(@{$self->background}); 			# background
-			$img->rectangle(0,0,$self->square,$self->square); 	# campisce il quadrato
+			$img->bgcolor(@{$self->background}); 				# background
+			$img->rectangle(0,0,$self->square,$self->square); 		# campisce il quadrato
 			$img->fgcolor(@{$self->foreground}); 				# foreground
 
 		$img->move($nx,$ny);
@@ -151,14 +160,14 @@ use constant pi => 3.141592;
 		(my $ro,my @initial_angle)=$self->set_starting_angle();
 		(my $nx,my $ny,my $di)=$self->init_geometry($ro);
 	 	
-		#  incremento del magic_number in modo da rendere complessa la crittoanalisti basandosi sul raggio vettore calcolato in base allo square iniziale
+		#  incremento del magic_number in modo da rendere complessa la crittoanalisi basandosi sul raggio vettore calcolato in base allo square iniziale
 		$di+=$self->magic;
 		$nx=$nx/$self->magic; # ascissa iniziale
 		$ny=$ny/$self->magic; # ordinata iniziale;
 
 		my ($this_byte,$byte_dec);
 		my $byte_pos=0;
-		
+
 		my ($fh_plain,$fh_encrypted);
 		open $fh_plain,'<',$name_plain_file or do {
 			push(@{$self->{message}},7);
@@ -169,13 +178,36 @@ use constant pi => 3.141592;
 				push(@{$self->{message}},8);
 				return
 			};
- 				while (!eof($fh_plain)) {
+			
+			#preporre $salt criptato al contenuto di $fh_plain e procedere normalmente
+			# qui verifico se applicare il salt oppure no
+
+				# qui calcolo il sale e lo cripto
+				my $salt;
+				if ($self->salted eq "true") {
+					$salt=$self->make_salt;
+					open my $fh_salt,"<",\$salt;
+						while (!eof($fh_salt)) {
+							read($fh_salt,$this_byte,1);
+
+							$byte_dec=unpack('C',$this_byte);
+							$byte_dec+=$self->magic+1;
+
+							# chiamata ricorsiva
+							($nx,$ny,$byte_pos)=$self->crypt_fract($ro,1,$di,$nx,$ny,$byte_dec,$byte_pos);
+							print $fh_encrypted $nx."\n".$ny."\n"
+						}
+					close $fh_salt
+				}
+
+				# qui processo il file in chiaro
+				while (!eof($fh_plain)) {
 					read($fh_plain,$this_byte,1);
 
 					$byte_dec=unpack('C',$this_byte);
 					$byte_dec+=$self->magic+1;
 
- 					# chiamata ricorsiva
+					# chiamata ricorsiva
 					($nx,$ny,$byte_pos)=$self->crypt_fract($ro,1,$di,$nx,$ny,$byte_dec,$byte_pos);
 					print $fh_encrypted $nx."\n".$ny."\n"
 				}
@@ -199,6 +231,13 @@ use constant pi => 3.141592;
 		my $char_code;
 		my $char_pos=0;
 		my @encrypted;
+		
+		# qui calcolo il sale e lo cripto
+		my $salt;
+		if ($self->salted eq "true") {
+			$salt=$self->make_salt;
+			$string=$salt.$string
+		}
 
 		for (split(//,$string)) {
 			$char_code=unpack('C',$_);
@@ -236,6 +275,7 @@ use constant pi => 3.141592;
 			};
 				binmode $fh_decrypted;
 
+				my $ignore_this_vertex if $self->salted eq "true";
 				while (!eof($fh_encrypted)) {
 					$x_coord=<$fh_encrypted>;$y_coord=<$fh_encrypted>;
 					chop($x_coord,$y_coord);
@@ -247,7 +287,16 @@ use constant pi => 3.141592;
 						
 							$this_byte_dec=$this_vertex-$from_vertex-$self->magic-1;
 							$this_byte=pack('C',$this_byte_dec);
-							print $fh_decrypted $this_byte;
+							
+							if ($self->salted eq "true") {
+								# se è salato devo saltare i primi $magic**2 bytes
+								$ignore_this_vertex++;
+								if ($ignore_this_vertex>$self->magic**2) {
+									print $fh_decrypted $this_byte;
+								}
+							} else {
+								print $fh_decrypted $this_byte
+							}
 							
 							#imposto il from per ripartire il ciclo for dal punto giusto alla prossima iterazione del while, quando ripartirà il for
 							$from_vertex=$this_vertex;
@@ -327,6 +376,18 @@ use constant pi => 3.141592;
 		return ($nx,$ny,$di)
 	}
 
+	sub make_salt {
+		my $self=shift;
+		my ($time,$rand,$salt);
+		do  {
+			$time=time();
+			$rand=rand()+10**-8;
+			$salt.=int($time/$rand);
+			$salt=substr($salt,0,$self->magic**2)
+		 } until (length($salt)==$self->magic**2);
+		 return $salt
+	}
+	
 	# functions calcolo angoli e coordinate
 	
 	sub evaluate_this_angle {
@@ -384,7 +445,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.12
+Version 0.24
 
 =head1 DESCRIPTION
 
@@ -406,7 +467,8 @@ on http://www.perl.it/documenti/articoli/2010/04/anakryptfna.html
        square => 4096,
        background => [255,255,255],
        foreground => [0,0,0],
-       magic => 2
+       magic => 2,
+       salted => 'true'
     }
   );
   
@@ -458,6 +520,15 @@ continuous function on the top, skipping some, this is still on top of all the i
 (Hence "fair").
 
 Default value: 3
+
+=head2 ATTRIBUTE salted
+
+The "salted" attribute, a boolean, instructs the class
+to use a cryptographic salt, so that multiple encryption
+the same data will, in general, different cryptogram.
+
+Default value: false (for backward compatibility with previous versions of FNA)
+
 
 =head1 METHODS
 
@@ -545,7 +616,8 @@ The image produced is contained in the square of side $square.
         square => 4096,
         background => [255,255,255],
         foreground => [0,0,0],
-        magic => 2
+        magic => 2,
+        salted => 'true'
       }
    );
    
@@ -626,6 +698,7 @@ The image produced is contained in the square of side $square.
   18 error zoom: the value must be a number greater than zero
   19 errors during object instantiation
   20 error magic setting
+  21 error salted value (true or false only)
 
 
 =head1 INTERNAL METHODS AND FUNCTIONS
@@ -644,6 +717,11 @@ Calculates the length of the side of the curve (F). This distance is used both i
 =head2 crypt_fract
 
 Is invoked by all methods (not "new") and calls the fundamental "evaluate_this_angle" as well as "evaluate_this_coords, calculating the angles and coordinates of the curve of its vertices. It 'a real ring junction in the recursive process.
+
+
+=head2 make_salt
+
+Invoked from all encryption methods, if the "salted" attribute is true: return a cryptographic salt, long as the square of the magic number.
 
 
 =head2 evaluate_this_angle

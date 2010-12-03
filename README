@@ -56,6 +56,7 @@ ERROR CODE
 	18 "error zoom: the value must be a number greater than zero."
 	19 "errors during object instantiation."
 	20 "error magic setting."
+	21 "error 'salted' setting (is a boolean, only 'true' or 'false')."
 
 
 COPYRIGHT AND LICENCE
