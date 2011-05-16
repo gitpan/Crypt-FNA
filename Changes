@@ -1,5 +1,8 @@
 Revision history for Crypt-FNA
 
+0.48    16/05/2011 12:03
+	RAM usage optimization
+
 0.24    03/12/2010 17:01
 	Added 'salted' attribute
 	Added 'make_salt' - internal - method

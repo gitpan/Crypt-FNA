@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.24';
+our $VERSION =  '0.48';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -136,8 +136,10 @@ use constant pi => 3.141592;
 		$img->move($nx,$ny);
 
 		for (my $k=0;$k<$ro**($self->r);$k++) {
-			${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if $k>=$ro;
-			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di);
+			if ($k<$ro**($self->r-1)) {
+				${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if $k>=$ro
+			}
+			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di,$ro);
 			$img->lineTo($nx,$ny)
 		}
 		
@@ -160,7 +162,8 @@ use constant pi => 3.141592;
 		(my $ro,my @initial_angle)=$self->set_starting_angle();
 		(my $nx,my $ny,my $di)=$self->init_geometry($ro);
 	 	
-		#  incremento del magic_number in modo da rendere complessa la crittoanalisi basandosi sul raggio vettore calcolato in base allo square iniziale
+		# incremento del magic_number in modo da rendere complessa la crittoanalisi
+		# basandosi sul raggio vettore calcolato in base allo square iniziale
 		$di+=$self->magic;
 		$nx=$nx/$self->magic; # ascissa iniziale
 		$ny=$ny/$self->magic; # ordinata iniziale;
@@ -174,19 +177,29 @@ use constant pi => 3.141592;
 			return
 		};
 			binmode $fh_plain;
+	
+	 		# somma del valore dei bytes coinvolti: fornisce il numero dei vertici da calcolare
+	 		# in modo da ottimizzare l'uso della ram
+			my $limit=$self->calc_limit($fh_plain,$ro);
+
 			open $fh_encrypted,'>',$name_encrypted_file or do {
 				push(@{$self->{message}},8);
 				return
 			};
 			
-			#preporre $salt criptato al contenuto di $fh_plain e procedere normalmente
+			# preporre $salt criptato al contenuto di $fh_plain e procedere normalmente
 			# qui verifico se applicare il salt oppure no
 
 				# qui calcolo il sale e lo cripto
 				my $salt;
+				
 				if ($self->salted eq "true") {
 					$salt=$self->make_salt;
+				
 					open my $fh_salt,"<",\$salt;
+					#occorre aumentare il limit computando quello dei bytes del salt
+					$limit+=$self->calc_limit($fh_salt,$ro);
+					
 						while (!eof($fh_salt)) {
 							read($fh_salt,$this_byte,1);
 
@@ -194,13 +207,14 @@ use constant pi => 3.141592;
 							$byte_dec+=$self->magic+1;
 
 							# chiamata ricorsiva
-							($nx,$ny,$byte_pos)=$self->crypt_fract($ro,1,$di,$nx,$ny,$byte_dec,$byte_pos);
+							($nx,$ny,$byte_pos)=$self->crypt_fract($ro,1,$di,$nx,$ny,$byte_dec,$byte_pos,$limit);
 							print $fh_encrypted $nx."\n".$ny."\n"
 						}
 					close $fh_salt
 				}
 
 				# qui processo il file in chiaro
+				
 				while (!eof($fh_plain)) {
 					read($fh_plain,$this_byte,1);
 
@@ -208,7 +222,7 @@ use constant pi => 3.141592;
 					$byte_dec+=$self->magic+1;
 
 					# chiamata ricorsiva
-					($nx,$ny,$byte_pos)=$self->crypt_fract($ro,1,$di,$nx,$ny,$byte_dec,$byte_pos);
+					($nx,$ny,$byte_pos)=$self->crypt_fract($ro,1,$di,$nx,$ny,$byte_dec,$byte_pos,$limit);
 					print $fh_encrypted $nx."\n".$ny."\n"
 				}
 			close ($fh_encrypted);
@@ -216,39 +230,6 @@ use constant pi => 3.141592;
 		@{$self->angle}=@initial_angle
 	}
 	
-	sub encrypt_scalar {
-		my $self=shift;
-		my $string=shift;
-
-		(my $ro,my @initial_angle)=$self->set_starting_angle();
-		(my $nx,my $ny,my $di)=$self->init_geometry($ro);
-		
-		# incremento del magic_number in modo da rendere maggiormente complessa l'individuazione della parte di chiave "di" alla crittoanalisi
-		$di+=$self->magic;
-		$nx=$nx/$self->magic; # ascissa iniziale
-		$ny=$ny/$self->magic; # ordinata iniziale;
-		
-		my $char_code;
-		my $char_pos=0;
-		my @encrypted;
-		
-		# qui calcolo il sale e lo cripto
-		my $salt;
-		if ($self->salted eq "true") {
-			$salt=$self->make_salt;
-			$string=$salt.$string
-		}
-
-		for (split(//,$string)) {
-			$char_code=unpack('C',$_);
-			$char_code+=$self->magic+1;# maschero il codice carattere
-			($nx,$ny,$char_pos)=$self->crypt_fract($ro,1,$di,$nx,$ny,$char_code,$char_pos); # chiamata ricorsiva
-			push(@encrypted,($nx,$ny))
-		}
-		@{$self->angle}=@initial_angle;
-		return (@encrypted)
-	}
-
 	sub decrypt_file {
 		my $self=shift;
 		my $name_encrypted_file=shift;
@@ -269,6 +250,20 @@ use constant pi => 3.141592;
 			push(@{$self->{message}},9);
 			return
 		};
+
+			# qui devo valutare il $limit ma non posso essere preciso come sulla cifratura
+			# poiché non conosco a priori il valore dei bytes ma posso impostarne il limite
+			# massimo, calcolando ogni byte a 256, dovrei comunque avere un risparmio
+			# di ram nell'ordine del 50%
+			# il numero di bytes da decodificare è pari al numero di righe del file cifrato/2
+			
+			my ($bytes,$limit);		
+			$bytes++ while <$fh_encrypted>;
+			seek ($fh_encrypted,0,0);
+			# qui moltiplico per 128 e non per 256 perchè le righe sono il doppio dei bytes ;)
+			my $exponent=log($bytes*128)/log($ro);
+			$ro**$exponent>int($ro**$exponent) ? $limit=int($ro**$exponent) : $limit=$ro**($exponent-1);
+		
 			open $fh_decrypted,'>',$name_decrypted_file or do {
 				push(@{$self->{message}},10);
 				return
@@ -282,7 +277,7 @@ use constant pi => 3.141592;
 					# ho usato chop perchè l'ultimo carattere è certamente \n e chop è più veloce di chomp
 
 					for (my $vertex=$from_vertex;$vertex<256+$from_vertex+$self->magic+1;$vertex++){
-						($nx,$ny,$this_vertex)=$self->crypt_fract($ro,1,$di,$nx,$ny,1,$vertex);
+						($nx,$ny,$this_vertex)=$self->crypt_fract($ro,1,$di,$nx,$ny,1,$vertex,$limit);
 						if ($nx eq $x_coord && $ny eq $y_coord) {
 						
 							$this_byte_dec=$this_vertex-$from_vertex-$self->magic-1;
@@ -307,6 +302,28 @@ use constant pi => 3.141592;
 			close $fh_decrypted;
 		close $fh_encrypted;
 		@{$self->angle}=@initial_angle
+	}
+
+	sub encrypt_scalar {
+		my $self=shift;
+		my $scalar=shift;
+
+		# hack cripta stringa 
+		
+			my ($fh_testo_chiaro,$file_chiaro);
+			open $fh_testo_chiaro, '>',\$file_chiaro or die "$_\n";
+				print $fh_testo_chiaro $scalar;
+			close $fh_testo_chiaro;
+
+			my ($fh_file_criptato,$file_criptato);
+			$self->encrypt_file(\$file_chiaro,\$file_criptato);
+			open $fh_file_criptato,'<',\$file_criptato or die "$_\n";
+				my @encrypted=<$fh_file_criptato>;
+			close $fh_file_criptato;
+			for (@encrypted) {chop($_)}
+	
+		# end		
+		return (@encrypted)
 	}
 
 	sub decrypt_scalar {
@@ -337,10 +354,16 @@ use constant pi => 3.141592;
 		my $ny=shift;
 		my $value_dec=shift;
 		my $pos=shift;
-		
+		my $limit=shift;
+
 		for (my $k=$pos;$k<($pos+$value_dec);$k++) {
-			${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if $k>=$ro;
-			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di)
+			#eh... devo vedere che r mi serve per coprire i bytes
+			#e siamo a cavallo
+			if ($pos<$limit) {
+				${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if $k>=$ro
+			}
+			#ho aggiunto ro
+			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di,$ro)
 		}
 		return($nx,$ny,$pos+$value_dec)
 	}
@@ -388,6 +411,23 @@ use constant pi => 3.141592;
 		 return $salt
 	}
 	
+	sub calc_limit {
+		my $self=shift;
+		my $fh_plain=shift;
+		my $ro=shift;
+		my ($bytes,$this_byte);
+		while (!eof($fh_plain)) {
+			read($fh_plain,$this_byte,1);
+			$bytes+=unpack('C',$this_byte)+$self->magic+1
+		}
+		seek $fh_plain,0,0; # riporto il puntatore all'inizio per la successiva scansione
+		my $exponent=log($bytes)/log($ro);
+
+		my $limit;
+		$ro**$exponent>int($ro**$exponent) ? $limit=int($ro**$exponent) : $limit=$ro**($exponent-1);
+		return $limit
+	}
+	
 	# functions calcolo angoli e coordinate
 	
 	sub evaluate_this_angle {
@@ -405,10 +445,11 @@ use constant pi => 3.141592;
 		my $nx=shift;
 		my $ny=shift;
 		my $di=shift;
-
+		my $ro=shift;
+		
 		if (!$zoom) {$zoom=1};
-		$nx=int(10**8*($nx-$di*$zoom*cos(${$self->angle}[$k])))/10**8;
-		$ny=int(10**8*($ny-$di*$zoom*sin(${$self->angle}[$k])))/10**8;
+		$nx=int(10**8*($nx-$di*$zoom*cos(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)])))/10**8;
+		$ny=int(10**8*($ny-$di*$zoom*sin(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)])))/10**8;
 
 		return ($nx,$ny)
 	}
@@ -445,7 +486,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.24
+Version 0.48
 
 =head1 DESCRIPTION
 
@@ -609,7 +650,7 @@ The image produced is contained in the square of side $square.
 =head2 making FNA object
 
   
-    my $krypto=FNA->new(
+    my $krypto=Crypt::FNA->new(
       {
         r=> '8',
         angle =>  [56,-187,215,64],
@@ -621,7 +662,7 @@ The image produced is contained in the square of side $square.
       }
    );
    
-  my $krypto2=FNA->new();
+  my $krypto2=Crypt::FNA->new();
   
 
 =head2 draw a fractal curve of {F}
@@ -722,6 +763,11 @@ Is invoked by all methods (not "new") and calls the fundamental "evaluate_this_a
 =head2 make_salt
 
 Invoked from all encryption methods, if the "salted" attribute is true: return a cryptographic salt, long as the square of the magic number.
+
+
+=head2 calc_limit
+
+This method optimizes memory usage by FNA, reducing minimum directions to be stored in memory. For properties of {F}, given 'n' vertices and a given order 'r' of the curve, the number of directions strictly necessary for the calculation is given by Ro = n ** r -> r = log (n) / log (Ro)
 
 
 =head2 evaluate_this_angle
