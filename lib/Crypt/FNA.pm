@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.48';
+our $VERSION =  '0.54';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -344,6 +344,46 @@ use constant pi => 3.141592;
 
 		return ($stringa_decriptata)
 	}
+	
+	sub mac {
+		my $self=shift;
+		my $name_plain_file=shift;
+		
+		my $salted_status=$self->salted;
+		$self->{salted}='false'; # non posso avere una firma digitale salata, non ha senso!
+		
+		my $can_use_Tie_File = eval 'use Tie::File; 1';
+		
+		if ($can_use_Tie_File) {
+
+			my $name_encrypted_file=$name_plain_file.'fna';
+			$self->encrypt_file($name_plain_file, $name_encrypted_file);
+
+			my $fh_encrypted;
+			open $fh_encrypted,'<',$name_encrypted_file or do {
+				push(@{$self->{message}},23);
+				$self->salted=$salted_status;
+				return
+			};
+			binmode $fh_encrypted;
+			
+			my @encrypted_file;
+			tie @encrypted_file, 'Tie::File', $fh_encrypted;
+				my $n_recs=@encrypted_file;
+				my $mac=$encrypted_file[$n_recs-1].$encrypted_file[$n_recs-2];
+				$mac =~ s/(\.|-)//g;
+			untie @encrypted_file;
+			close $fh_encrypted;
+			unlink $name_encrypted_file;
+			
+			$self->{salted}=$salted_status;
+			return($mac)
+		} else {
+			push(@{$self->{message}},22);
+			$self->salted=$salted_status;
+			return
+		}
+	}
 
 	sub crypt_fract {
 		my $self=shift;
@@ -486,7 +526,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.48
+Version 0.54
 
 =head1 DESCRIPTION
 
@@ -611,7 +651,7 @@ The method encrypt_scalar digit strings: the result of encryption is a vector co
 The syntax is:
 
   
-  @encrypted_scalar=$krypto->encrypt_scalar($this_scalar)
+  my @encrypted_scalar=$krypto->encrypt_scalar($this_scalar)
 
   
 See examples
@@ -624,6 +664,18 @@ The syntax is:
   
   @decrypted_scalar=$krypto->decrypt_scalar(@encrypted_scalar)
   
+
+=head2 mac
+
+The MAC method, computes the digital signature of a file (FNA work how a digest algoritm). The signature is represented by the coordinates of the last vertex of the curve {F} used.
+The syntax is:
+
+  
+  my $mac=$krypto->mac($name_plain_file)
+  
+
+The input file of any format will be encrypt by the curve (F).
+
 
 =head2 make_fract
 
@@ -740,6 +792,9 @@ The image produced is contained in the square of side $square.
   19 errors during object instantiation
   20 error magic setting
   21 error salted value (true or false only)
+  22 error loading Tie::File
+  23 Error reading sub mac, package Crypt::FNA"	
+
 
 
 =head1 INTERNAL METHODS AND FUNCTIONS

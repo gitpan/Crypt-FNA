@@ -1,5 +1,8 @@
 Revision history for Crypt-FNA
 
+0.54    15/08/2011 13:32
+	Added 'MAC' method (digest)
+
 0.48    16/05/2011 12:03
 	RAM usage optimization
 

@@ -1,16 +1,18 @@
 ---
-name: Crypt-FNA
-version: 0.54
+abstract: 'Fractal Numerical Algorithm - FNA - a new symmetric fractal encryption method'
 author:
   - 'Mario Rossano aka Anak <software@netlogicalab.com>'
-abstract: Fractal Numerical Algorithm - FNA - a new symmetric fractal encryption method
-license: perl
 build_requires:
   Test::More: 0
-generated_by: Module::Build version 0.33
+configure_requires:
+  Module::Build: 0.36
+dynamic_config: 0
+generated_by: 'Module::Build version 0.3607'
+license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
+name: Crypt-FNA
 provides:
   Crypt::FNA:
     file: lib/Crypt/FNA.pm
@@ -20,3 +22,4 @@ provides:
     version: 0.02
 resources:
   license: http://dev.perl.org/licenses/
+version: 0.54

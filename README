@@ -57,7 +57,8 @@ ERROR CODE
 	19 "errors during object instantiation."
 	20 "error magic setting."
 	21 "error 'salted' setting (is a boolean, only 'true' or 'false')."
-
+	22 "error loading Tie::File."
+	23 "Error reading sub mac, package anakrypt: FNA"	
 
 COPYRIGHT AND LICENCE
 
