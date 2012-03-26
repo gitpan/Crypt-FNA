@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.54';
+our $VERSION =  '0.56';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -137,7 +137,7 @@ use constant pi => 3.141592;
 
 		for (my $k=0;$k<$ro**($self->r);$k++) {
 			if ($k<$ro**($self->r-1)) {
-				${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if $k>=$ro
+				${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro);# if $k>=$ro
 			}
 			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di,$ro);
 			$img->lineTo($nx,$ny)
@@ -400,9 +400,8 @@ use constant pi => 3.141592;
 			#eh... devo vedere che r mi serve per coprire i bytes
 			#e siamo a cavallo
 			if ($pos<$limit) {
-				${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if $k>=$ro
+				${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro);# if $k>=$ro
 			}
-			#ho aggiunto ro
 			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di,$ro)
 		}
 		return($nx,$ny,$pos+$value_dec)
@@ -526,7 +525,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.54
+Version 0.56
 
 =head1 DESCRIPTION
 

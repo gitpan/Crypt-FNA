@@ -1,6 +1,6 @@
 ---
 name: Crypt-FNA
-version: 0.54
+version: 0.56
 author:
   - 'Mario Rossano aka Anak <software@netlogicalab.com>'
 abstract: Fractal Numerical Algorithm - FNA - a new symmetric fractal encryption method
@@ -14,7 +14,7 @@ meta-spec:
 provides:
   Crypt::FNA:
     file: lib/Crypt/FNA.pm
-    version: 0.54
+    version: 0.56
   Crypt::FNA::Validation:
     file: lib/Crypt/FNA/Validation.pm
     version: 0.02

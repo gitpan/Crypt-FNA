@@ -13,7 +13,7 @@ do{ my $x = [
          'conflicts' => {},
          'recommends' => {},
          'scripts' => undef,
-         'dist_version' => '0.54',
+         'dist_version' => '0.56',
          'pod_files' => undef,
          'config_dir' => '_build',
          'sign' => undef,
@@ -27,7 +27,7 @@ do{ my $x = [
                                     'conflicts',
                                     'recommends'
                                   ],
-         'base_dir' => 'C:/Users/Anak/Desktop/ipw2011/Crypt-FNA-0.54/Crypt-FNA-0.54',
+         'base_dir' => 'C:/Users/Anak/Desktop/ipw2011/Crypt-FNA-0.56/Crypt-FNA-0.56',
          'allow_mb_mismatch' => 0,
          'xs_files' => undef,
          'destdir' => undef,
@@ -81,7 +81,7 @@ do{ my $x = [
                                'script'
                              ],
          'needs_compiler' => '',
-         'orig_dir' => 'C:/Users/Anak/Desktop/ipw2011/Crypt-FNA-0.54/Crypt-FNA-0.54',
+         'orig_dir' => 'C:/Users/Anak/Desktop/ipw2011/Crypt-FNA-0.56/Crypt-FNA-0.56',
          'include_dirs' => [],
          'installdirs' => 'site',
          'mymetafile' => 'MYMETA.yml',
