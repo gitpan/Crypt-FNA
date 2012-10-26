@@ -16,10 +16,10 @@ name: Crypt-FNA
 provides:
   Crypt::FNA:
     file: lib/Crypt/FNA.pm
-    version: 0.56
+    version: 0.58
   Crypt::FNA::Validation:
     file: lib/Crypt/FNA/Validation.pm
     version: 0.02
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.56
+version: 0.58

@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.56';
+our $VERSION =  '0.58';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -108,9 +108,7 @@ use constant pi => 3.141592;
 
 	
 	sub make_fract {
-		my $self=shift;
-		my $png_filename=shift;
-		my $zoom=shift;
+		my ($self,$png_filename,$zoom)=@_;
 
 		(my $ro,my @initial_angle)=$self->set_starting_angle();
 		(my $nx,my $ny,my $di)=$self->init_geometry($ro);
@@ -135,10 +133,8 @@ use constant pi => 3.141592;
 
 		$img->move($nx,$ny);
 
-		for (my $k=0;$k<$ro**($self->r);$k++) {
-			if ($k<$ro**($self->r-1)) {
-				${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro);# if $k>=$ro
-			}
+		for my $k(0..$ro**($self->r)-1) {
+			${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if ($k>=$ro && $k<$ro**($self->r-1));
 			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di,$ro);
 			$img->lineTo($nx,$ny)
 		}
@@ -155,15 +151,11 @@ use constant pi => 3.141592;
 	}
 
 	sub encrypt_file {
-		my $self=shift;
-		my $name_plain_file=shift;
-		my $name_encrypted_file=shift;
+		my ($self,$name_plain_file,$name_encrypted_file)=@_;
 
 		(my $ro,my @initial_angle)=$self->set_starting_angle();
 		(my $nx,my $ny,my $di)=$self->init_geometry($ro);
 	 	
-		# incremento del magic_number in modo da rendere complessa la crittoanalisi
-		# basandosi sul raggio vettore calcolato in base allo square iniziale
 		$di+=$self->magic;
 		$nx=$nx/$self->magic; # ascissa iniziale
 		$ny=$ny/$self->magic; # ordinata iniziale;
@@ -198,15 +190,9 @@ use constant pi => 3.141592;
 				
 					open my $fh_salt,"<",\$salt;
 					#occorre aumentare il limit computando quello dei bytes del salt
-					$limit+=$self->calc_limit($fh_salt,$ro);
-					
-						while (!eof($fh_salt)) {
-							read($fh_salt,$this_byte,1);
-
-							$byte_dec=unpack('C',$this_byte);
-							$byte_dec+=$self->magic+1;
-
-							# chiamata ricorsiva
+						$limit+=$self->calc_limit($fh_salt,$ro);
+						while (read($fh_salt,$this_byte,1)) {
+							$byte_dec=unpack('C',$this_byte)+$self->magic+1;
 							($nx,$ny,$byte_pos)=$self->crypt_fract($ro,1,$di,$nx,$ny,$byte_dec,$byte_pos,$limit);
 							print $fh_encrypted $nx."\n".$ny."\n"
 						}
@@ -214,14 +200,8 @@ use constant pi => 3.141592;
 				}
 
 				# qui processo il file in chiaro
-				
-				while (!eof($fh_plain)) {
-					read($fh_plain,$this_byte,1);
-
-					$byte_dec=unpack('C',$this_byte);
-					$byte_dec+=$self->magic+1;
-
-					# chiamata ricorsiva
+				while (read($fh_plain,$this_byte,1)) {
+					$byte_dec=unpack('C',$this_byte)+$self->magic+1;
 					($nx,$ny,$byte_pos)=$self->crypt_fract($ro,1,$di,$nx,$ny,$byte_dec,$byte_pos,$limit);
 					print $fh_encrypted $nx."\n".$ny."\n"
 				}
@@ -231,9 +211,7 @@ use constant pi => 3.141592;
 	}
 	
 	sub decrypt_file {
-		my $self=shift;
-		my $name_encrypted_file=shift;
-		my $name_decrypted_file=shift;
+		my ($self,$name_encrypted_file,$name_decrypted_file)=@_;
 
 		(my $ro,my @initial_angle)=$self->set_starting_angle();
 		(my $nx,my $ny,my $di)=$self->init_geometry($ro);
@@ -276,7 +254,7 @@ use constant pi => 3.141592;
 					chop($x_coord,$y_coord);
 					# ho usato chop perchè l'ultimo carattere è certamente \n e chop è più veloce di chomp
 
-					for (my $vertex=$from_vertex;$vertex<256+$from_vertex+$self->magic+1;$vertex++){
+					for my $vertex($from_vertex..256+$from_vertex+$self->magic) {
 						($nx,$ny,$this_vertex)=$self->crypt_fract($ro,1,$di,$nx,$ny,1,$vertex,$limit);
 						if ($nx eq $x_coord && $ny eq $y_coord) {
 						
@@ -305,11 +283,9 @@ use constant pi => 3.141592;
 	}
 
 	sub encrypt_scalar {
-		my $self=shift;
-		my $scalar=shift;
+		my ($self,$scalar)=@_;
 
 		# hack cripta stringa 
-		
 			my ($fh_testo_chiaro,$file_chiaro);
 			open $fh_testo_chiaro, '>',\$file_chiaro or die "$_\n";
 				print $fh_testo_chiaro $scalar;
@@ -321,14 +297,12 @@ use constant pi => 3.141592;
 				my @encrypted=<$fh_file_criptato>;
 			close $fh_file_criptato;
 			for (@encrypted) {chop($_)}
-	
 		# end		
 		return (@encrypted)
 	}
 
 	sub decrypt_scalar {
-		my $self=shift;
-		my @encrypted_scalar=@_;
+		my ($self,@encrypted_scalar)=@_;
 
 		# hack ricostruzione stringa 
 		
@@ -346,8 +320,7 @@ use constant pi => 3.141592;
 	}
 	
 	sub mac {
-		my $self=shift;
-		my $name_plain_file=shift;
+		my ($self,$name_plain_file)=@_;
 		
 		my $salted_status=$self->salted;
 		$self->{salted}='false'; # non posso avere una firma digitale salata, non ha senso!
@@ -386,22 +359,9 @@ use constant pi => 3.141592;
 	}
 
 	sub crypt_fract {
-		my $self=shift;
-		my $ro=shift;
-		my $zoom=shift;
-		my $di=shift;
-		my $nx=shift;
-		my $ny=shift;
-		my $value_dec=shift;
-		my $pos=shift;
-		my $limit=shift;
-
-		for (my $k=$pos;$k<($pos+$value_dec);$k++) {
-			#eh... devo vedere che r mi serve per coprire i bytes
-			#e siamo a cavallo
-			if ($pos<$limit) {
-				${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro);# if $k>=$ro
-			}
+		my ($self,$ro,$zoom,$di,$nx,$ny,$value_dec,$pos,$limit)=@_;
+		for my $k($pos..$pos+$value_dec-1) {
+			${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if $pos<$limit; #$k>=$ro && 
 			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di,$ro)
 		}
 		return($nx,$ny,$pos+$value_dec)
@@ -418,7 +378,7 @@ use constant pi => 3.141592;
 		my @initial_angle;
 		
 		#conversione in radianti
-		for (my $k=0;$k<$ro;$k++) {
+		for my $k(0..$ro-1) {
 			push(@initial_angle,${$self->angle}[$k]);
 			${$self->angle}[$k]=${$self->angle}[$k]*pi/180
 		}
@@ -426,8 +386,7 @@ use constant pi => 3.141592;
 	}
 
 	sub init_geometry {
-		my $self=shift;
-		my $ro=shift;
+		my ($self,$ro)=@_;
 		
 		my $di=int(($self->square/$ro**$self->r)*10000)/5000; # lunghezza di un segmento di curva frattale
 		while ($di<5) { # qualora la dimensione sia troppo esigua per la visualizzazione e calcolo, aumento di una unità e moltiplico per il valore precedente (aumento di 1 perchè se di<1 otterrei dei numeri tendenti a zero all'aumentare del numero dei cicli in un loop infinito)
@@ -451,9 +410,7 @@ use constant pi => 3.141592;
 	}
 	
 	sub calc_limit {
-		my $self=shift;
-		my $fh_plain=shift;
-		my $ro=shift;
+		my ($self,$fh_plain,$ro)=@_;
 		my ($bytes,$this_byte);
 		while (!eof($fh_plain)) {
 			read($fh_plain,$this_byte,1);
@@ -470,47 +427,37 @@ use constant pi => 3.141592;
 	# functions calcolo angoli e coordinate
 	
 	sub evaluate_this_angle {
-		my $self=shift;
-		my $k=shift;
-		my $ro=shift;
-
+		my ($self,$k,$ro)=@_;
 		return ${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)]
 	}
 
 	sub evaluate_this_coords {
-		my $self=shift;
-		my $k=shift;
-		my $zoom=shift;
-		my $nx=shift;
-		my $ny=shift;
-		my $di=shift;
-		my $ro=shift;
-		
-		if (!$zoom) {$zoom=1};
-		$nx=int(10**8*($nx-$di*$zoom*cos(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)])))/10**8;
-		$ny=int(10**8*($ny-$di*$zoom*sin(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)])))/10**8;
+		my ($self,$k,$zoom,$nx,$ny,$di,$ro)=@_;
+		#$zoom=1 if !$zoom;
 
-		return ($nx,$ny)
+		$nx=$nx-$di*cos(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)]);
+		$ny=$ny-$di*sin(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)]);
+
+		return (round($nx,6),round($ny,6))
 	}
 
  	# ramo o gruppo di {F}
 	sub g {
-		my $k=shift;
-		my $ro=shift;
-
-		my $n=int($k/$ro);
-		return $n
+		my ($k,$ro)=@_;
+		return int($k/$ro)
 	}
  	
  	# posizione nel ramo
 	sub p {
-		my $k=shift;
-		my $ro=shift;
-
-		my $n=$k-$ro*g($k,$ro);
-		return $n
+		my ($k,$ro)=@_;
+		return $k-$ro*g($k,$ro)
 	}
 
+	# tronca alla n-esima cifra decimale (più veloce di sprintf)
+	sub round {
+		my ($number,$decimal)=@_;
+		return int(10**$decimal*$number)/10**$decimal
+	}
 	# fine function per identificazione direzioni genitore
 
 # end subroutine
@@ -525,7 +472,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.56
+Version 0.58
 
 =head1 DESCRIPTION
 
