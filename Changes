@@ -1,5 +1,8 @@
 Revision history for Crypt-FNA
 
+0.60    29/10/2012 15:05
+	fixed error on makefile.pl
+
 0.59    29/10/2012 11:32
 	rebuilt distribution module with module-starter
 

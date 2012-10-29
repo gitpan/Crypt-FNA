@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.59';
+our $VERSION =  '0.60';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -389,9 +389,7 @@ use constant pi => 3.141592;
 		my ($self,$ro)=@_;
 		
 		my $di=int(($self->square/$ro**$self->r)*10000)/5000; # lunghezza di un segmento di curva frattale
-		while ($di<5) { # qualora la dimensione sia troppo esigua per la visualizzazione e calcolo, aumento di una unità e moltiplico per il valore precedente (aumento di 1 perchè se di<1 otterrei dei numeri tendenti a zero all'aumentare del numero dei cicli in un loop infinito)
-			$di=$di*(1+$di)
-		}
+		$di=$di+1 if $di<1;
 		my $nx=$self->square/2; # ascissa iniziale
 		my $ny=$self->square/2; # ordinata iniziale
 		return ($nx,$ny,$di)
@@ -472,7 +470,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.59
+Version 0.60
 
 =head1 DESCRIPTION
 

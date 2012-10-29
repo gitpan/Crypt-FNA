@@ -7,7 +7,7 @@ WriteMakefile(
     NAME             => 'Crypt::FNA',
     AUTHOR           => q{Mario Rossano <software@netlogica.it>},
     VERSION_FROM     => 'lib/Crypt/FNA.pm',
-    ABSTRACT_FROM    => 'lib/Crypt/FNA.pm',
+    ABSTRACT_FROM    => 'Fractal Numerical Algorithm for a new cryptography technology',
     LICENSE          => 'Artistic_2_0',
     PL_FILES         => {},
     MIN_PERL_VERSION => 5.006,
