@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.60';
+our $VERSION =  '0.61';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -123,6 +123,7 @@ use constant pi => 3.141592;
 		#controllo zoom, solo valori numerici e > 0
 			my $validate=Crypt::FNA::Validation->new({intercept => [$zoom,$self]});
 			($zoom,@{$self->message})=$validate->param_zoom_fna($self);
+			$di=$di*$zoom if $zoom <> 1;
 		#fine controllo zoom
 
 		my $img = GD::Simple->new($self->square,$self->square);
@@ -135,7 +136,7 @@ use constant pi => 3.141592;
 
 		for my $k(0..$ro**($self->r)-1) {
 			${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if ($k>=$ro && $k<$ro**($self->r-1));
-			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di,$ro);
+			($nx,$ny)=$self->evaluate_this_coords($k,$nx,$ny,$di,$ro);
 			$img->lineTo($nx,$ny)
 		}
 		
@@ -430,8 +431,7 @@ use constant pi => 3.141592;
 	}
 
 	sub evaluate_this_coords {
-		my ($self,$k,$zoom,$nx,$ny,$di,$ro)=@_;
-		#$zoom=1 if !$zoom;
+		my ($self,$k,$nx,$ny,$di,$ro)=@_;
 
 		$nx=$nx-$di*cos(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)]);
 		$ny=$ny-$di*sin(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)]);
@@ -470,7 +470,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.60
+Version 0.61
 
 =head1 DESCRIPTION
 

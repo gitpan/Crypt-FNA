@@ -1,5 +1,8 @@
 Revision history for Crypt-FNA
 
+0.61    29/10/2012 16:05
+	fixed zoom factor on method make_fract
+	
 0.60    29/10/2012 15:05
 	fixed error on makefile.pl
 
