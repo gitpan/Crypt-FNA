@@ -22,7 +22,7 @@ package Crypt::FNA;
 	use Crypt::FNA::Validation;
 # fine caricamento lib
 
-our $VERSION =  '0.58';
+our $VERSION =  '0.59';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -472,7 +472,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.58
+Version 0.59
 
 =head1 DESCRIPTION
 

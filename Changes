@@ -1,5 +1,8 @@
 Revision history for Crypt-FNA
 
+0.59    29/10/2012 11:32
+	rebuilt distribution module with module-starter
+
 0.58    26/10/2012 10:40
 	code optimization
 
