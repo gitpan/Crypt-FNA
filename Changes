@@ -1,5 +1,8 @@
 Revision history for Crypt-FNA
 
+0.62    30/10/2012 17:00
+	fixed abstract
+
 0.61    29/10/2012 16:05
 	fixed zoom factor on method make_fract
 	

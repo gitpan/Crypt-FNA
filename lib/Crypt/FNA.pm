@@ -1,10 +1,8 @@
-# package: Anak Cryptography with Fractal Numerical Algorithm FNA
-# author: Mario Rossano aka Anak, www.netlogicalab.com, www.netlogica.it; software@netlogicalab.com; software@netlogica.it
+# package: Fractal Numerical Algorithm FNA
+# author: Mario Rossano aka Anak, www.netlogica.it; software@netlogica.it
 # birthday 05/08/1970; birthplace: Italy
 # LIBRARY FILE
 
-# Copyright (C) 2009,2010 Mario Rossano aka Anak
-#
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of either:
 # CC-NC-BY-SA 
@@ -16,13 +14,11 @@
 
 package Crypt::FNA;
 
-# caricamento lib
-	use strict;
-	use warnings;
-	use Crypt::FNA::Validation;
-# fine caricamento lib
+use strict;
+use warnings;
+use Crypt::FNA::Validation;
 
-our $VERSION =  '0.61';
+our $VERSION =  '0.62';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -49,63 +45,62 @@ use constant pi => 3.141592;
 		return $self	
 	}
 	
-		sub r {
-			my $self=shift;
-			if (@_) {
-				$self->{r}=shift
-			}
-			return $self->{r}
+	sub r {
+		my $self=shift;
+		if (@_) {
+			$self->{r}=shift
 		}
-		sub angle {
-			my $self=shift;
-			if (@_) {
-				$self->{angle}=shift
-			}
-			return $self->{angle}
+		return $self->{r}
+	}
+	sub angle {
+		my $self=shift;
+		if (@_) {
+			$self->{angle}=shift
 		}
-		sub square {
-			my $self=shift;
-			if (@_) {
-				$self->{square}=shift
-			}
-			return $self->{square}
+		return $self->{angle}
+	}
+	sub square {
+		my $self=shift;
+		if (@_) {
+			$self->{square}=shift
 		}
-		sub background {
-			my $self=shift;
-			if (@_) {
-				$self->{background}=shift
-			}
-			return $self->{background}
+		return $self->{square}
+	}
+	sub background {
+		my $self=shift;
+		if (@_) {
+			$self->{background}=shift
 		}
-		sub foreground {
-			my $self=shift;
-			if (@_) {
-				$self->{foreground}=shift
-			}
-			return $self->{foreground}
+		return $self->{background}
+	}
+	sub foreground {
+		my $self=shift;
+		if (@_) {
+			$self->{foreground}=shift
 		}
-		sub magic {
-			my $self=shift;
-			if (@_) {
-				$self->{magic}=shift
-			}
-			return $self->{magic}
+		return $self->{foreground}
+	}
+	sub magic {
+		my $self=shift;
+		if (@_) {
+			$self->{magic}=shift
 		}
-		sub message {
-			my $self=shift;
-			if (@_) {
-				$self->{message}=shift
-			}
-			return $self->{message}
+		return $self->{magic}
+	}
+	sub message {
+		my $self=shift;
+		if (@_) {
+			$self->{message}=shift
 		}
-		sub salted {
-			my $self=shift;
-			if (@_) {
-				$self->{salted}=shift
-			}
-			return $self->{salted}
+		return $self->{message}
+	}
+	sub salted {
+		my $self=shift;
+		if (@_) {
+			$self->{salted}=shift
 		}
-
+		return $self->{salted}
+	}
 	
 	sub make_fract {
 		my ($self,$png_filename,$zoom)=@_;
@@ -439,7 +434,7 @@ use constant pi => 3.141592;
 		return (round($nx,6),round($ny,6))
 	}
 
- 	# ramo o gruppo di {F}
+ 	# ramo di {F}
 	sub g {
 		my ($k,$ro)=@_;
 		return int($k/$ro)
@@ -456,10 +451,8 @@ use constant pi => 3.141592;
 		my ($number,$decimal)=@_;
 		return int(10**$decimal*$number)/10**$decimal
 	}
-	# fine function per identificazione direzioni genitore
 
 # end subroutine
-
 1;
 
 # POD SECTION
@@ -470,7 +463,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.61
+Version 0.62
 
 =head1 DESCRIPTION
 
