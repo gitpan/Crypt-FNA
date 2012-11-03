@@ -1,10 +1,9 @@
 #!perl -T
+
 use 5.006;
 use strict;
-use warnings FATAL => 'all';
-use Test::More;
-
-plan tests => 4;
+use warnings;
+use Test::More tests => 4;
 
 sub not_in_file_ok {
     my ($filename, %regex) = @_;

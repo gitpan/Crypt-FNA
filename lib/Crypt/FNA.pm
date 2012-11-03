@@ -18,7 +18,7 @@ use strict;
 use warnings;
 use Crypt::FNA::Validation;
 
-our $VERSION =  '0.62';
+our $VERSION =  '0.63';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -118,7 +118,7 @@ use constant pi => 3.141592;
 		#controllo zoom, solo valori numerici e > 0
 			my $validate=Crypt::FNA::Validation->new({intercept => [$zoom,$self]});
 			($zoom,@{$self->message})=$validate->param_zoom_fna($self);
-			$di=$di*$zoom if $zoom <> 1;
+			$di=$di*$zoom if $zoom != 1;
 		#fine controllo zoom
 
 		my $img = GD::Simple->new($self->square,$self->square);
@@ -463,7 +463,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.62
+Version 0.63
 
 =head1 DESCRIPTION
 
