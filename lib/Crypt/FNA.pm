@@ -1,5 +1,5 @@
-# package: Fractal Numerical Algorithm FNA
-# author: Mario Rossano aka Anak, www.netlogica.it; software@netlogica.it
+# package: Anak Cryptography with Fractal Numerical Algorithm FNA
+# author: Mario Rossano aka Anak, www.netlogicalab.com, www.netlogica.it; software@netlogicalab.com; software@netlogica.it
 # birthday 05/08/1970; birthplace: Italy
 # LIBRARY FILE
 
@@ -14,11 +14,13 @@
 
 package Crypt::FNA;
 
-use strict;
-use warnings;
-use Crypt::FNA::Validation;
+# caricamento lib
+	use strict;
+	use warnings;
+	use Crypt::FNA::Validation;
+# fine caricamento lib
 
-our $VERSION =  '0.63';
+our $VERSION =  '0.64';
 use constant pi => 3.141592;
 
 # metodi ed attributi
@@ -101,7 +103,7 @@ use constant pi => 3.141592;
 		}
 		return $self->{salted}
 	}
-	
+
 	sub make_fract {
 		my ($self,$png_filename,$zoom)=@_;
 
@@ -131,7 +133,7 @@ use constant pi => 3.141592;
 
 		for my $k(0..$ro**($self->r)-1) {
 			${$self->angle}[$k]=$self->evaluate_this_angle($k,$ro) if ($k>=$ro && $k<$ro**($self->r-1));
-			($nx,$ny)=$self->evaluate_this_coords($k,$nx,$ny,$di,$ro);
+			($nx,$ny)=$self->evaluate_this_coords($k,$zoom,$nx,$ny,$di,$ro);
 			$img->lineTo($nx,$ny)
 		}
 		
@@ -229,12 +231,12 @@ use constant pi => 3.141592;
 			# poiché non conosco a priori il valore dei bytes ma posso impostarne il limite
 			# massimo, calcolando ogni byte a 256, dovrei comunque avere un risparmio
 			# di ram nell'ordine del 50%
-			# il numero di bytes da decodificare è pari al numero di righe del file cifrato/2
+			# il numero di bytes da decodificare e' pari al numero di righe del file cifrato/2
 			
 			my ($bytes,$limit);		
 			$bytes++ while <$fh_encrypted>;
 			seek ($fh_encrypted,0,0);
-			# qui moltiplico per 128 e non per 256 perchè le righe sono il doppio dei bytes ;)
+			# qui moltiplico per 128 e non per 256 perche' le righe sono il doppio dei bytes
 			my $exponent=log($bytes*128)/log($ro);
 			$ro**$exponent>int($ro**$exponent) ? $limit=int($ro**$exponent) : $limit=$ro**($exponent-1);
 		
@@ -248,7 +250,7 @@ use constant pi => 3.141592;
 				while (!eof($fh_encrypted)) {
 					$x_coord=<$fh_encrypted>;$y_coord=<$fh_encrypted>;
 					chop($x_coord,$y_coord);
-					# ho usato chop perchè l'ultimo carattere è certamente \n e chop è più veloce di chomp
+					# ho usato chop perche' l'ultimo carattere e' certamente \n e chop e' piu' veloce di chomp
 
 					for my $vertex($from_vertex..256+$from_vertex+$self->magic) {
 						($nx,$ny,$this_vertex)=$self->crypt_fract($ro,1,$di,$nx,$ny,1,$vertex,$limit);
@@ -258,7 +260,7 @@ use constant pi => 3.141592;
 							$this_byte=pack('C',$this_byte_dec);
 							
 							if ($self->salted eq "true") {
-								# se è salato devo saltare i primi $magic**2 bytes
+								# se e' salato devo saltare i primi $magic**2 bytes
 								$ignore_this_vertex++;
 								if ($ignore_this_vertex>$self->magic**2) {
 									print $fh_decrypted $this_byte;
@@ -267,7 +269,7 @@ use constant pi => 3.141592;
 								print $fh_decrypted $this_byte
 							}
 							
-							#imposto il from per ripartire il ciclo for dal punto giusto alla prossima iterazione del while, quando ripartirà il for
+							#imposto il from per ripartire il ciclo for dal punto giusto alla prossima iterazione del while, quando ripartira' il for
 							$from_vertex=$this_vertex;
 							last
 						}
@@ -301,7 +303,6 @@ use constant pi => 3.141592;
 		my ($self,@encrypted_scalar)=@_;
 
 		# hack ricostruzione stringa 
-		
 			my ($fh_testo_criptato,$file_criptato);
 			open $fh_testo_criptato, '>',\$file_criptato or die "$_\n";
 				for (@encrypted_scalar) {print $fh_testo_criptato $_."\n"}
@@ -309,9 +310,7 @@ use constant pi => 3.141592;
 
 			my ($fh_testo_decriptato,$stringa_decriptata);
 			$self->decrypt_file(\$file_criptato,\$stringa_decriptata);
-	
 		# end
-
 		return ($stringa_decriptata)
 	}
 	
@@ -319,7 +318,7 @@ use constant pi => 3.141592;
 		my ($self,$name_plain_file)=@_;
 		
 		my $salted_status=$self->salted;
-		$self->{salted}='false'; # non posso avere una firma digitale salata, non ha senso!
+		$self->{salted}='false'; # non posso fare mac con salatura, non ha senso!
 		
 		my $can_use_Tie_File = eval 'use Tie::File; 1';
 		
@@ -363,7 +362,7 @@ use constant pi => 3.141592;
 		return($nx,$ny,$pos+$value_dec)
 	}
 
-	# fine metodi e proprietà oggetto
+	# fine metodi e proprieta' oggetto
 
 	# subroutine di servizio
 
@@ -426,7 +425,7 @@ use constant pi => 3.141592;
 	}
 
 	sub evaluate_this_coords {
-		my ($self,$k,$nx,$ny,$di,$ro)=@_;
+		my ($self,$k,$zoom,$nx,$ny,$di,$ro)=@_;
 
 		$nx=$nx-$di*cos(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)]);
 		$ny=$ny-$di*sin(${$self->angle}[g($k,$ro)]+${$self->angle}[p($k,$ro)]);
@@ -446,13 +445,15 @@ use constant pi => 3.141592;
 		return $k-$ro*g($k,$ro)
 	}
 
-	# tronca alla n-esima cifra decimale (più veloce di sprintf)
+	# tronca alla n-esima cifra decimale (piu' veloce di sprintf)
 	sub round {
 		my ($number,$decimal)=@_;
 		return int(10**$decimal*$number)/10**$decimal
 	}
+	# fine function per identificazione direzioni genitore
 
 # end subroutine
+
 1;
 
 # POD SECTION
@@ -463,7 +464,7 @@ Crypt::FNA
 
 =head1 VERSION
 
-Version 0.63
+Version 0.64
 
 =head1 DESCRIPTION
 
@@ -684,7 +685,7 @@ The image produced is contained in the square of side $square.
 =head2 scalar encryption
 
   
-  my @encrypted_scalar=$krypto->encrypt_scalar('questa è una prova');
+  my @encrypted_scalar=$krypto->encrypt_scalar('test');
   for(@encrypted_scalar) {print $_."\n"}
 
 =head2 scalar decryption
@@ -760,6 +761,11 @@ Invoked from all encryption methods, if the "salted" attribute is true: return a
 =head2 calc_limit
 
 This method optimizes memory usage by FNA, reducing minimum directions to be stored in memory. For properties of {F}, given 'n' vertices and a given order 'r' of the curve, the number of directions strictly necessary for the calculation is given by Ro = n ** r -> r = log (n) / log (Ro)
+
+
+=head2 round
+
+rounding decimals
 
 
 =head2 evaluate_this_angle
@@ -898,7 +904,7 @@ Follow the curve occurring fractal, from vertex to vertex, that the coordinates 
   Mario Rossano
   software@netlogicalab.com
   software@netlogica.it
-  http://www.netlogicalab.com
+  http://www.netlogica.it
 
 =head1 BUGS
 
@@ -911,7 +917,7 @@ Write me :) software@netlogica.it
 
 =head1 COPYRIGHT & LICENSE
 
-FNA by Mario Rossano, http://www.netlogicalab.com
+FNA by Mario Rossano, http://www.netlogica.it
 
 This pod text by Mario Rossano
 
