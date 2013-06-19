@@ -1,5 +1,8 @@
 Revision history for Crypt-FNA
 
+0.65    19/06/2013 04:20
+	new test
+
 0.64    18/06/2013 20:45
 	fixed crypt_fract method
 

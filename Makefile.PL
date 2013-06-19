@@ -4,10 +4,10 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME                => 'Crypt::FNA',
-    AUTHOR              => q{Mario Rossano <software@netlogica.it>},
-    VERSION_FROM        => 'lib/Crypt/FNA.pm',
-    ABSTRACT       => 'FNA Fractal Numerical Algorithm for a new cryptography technology',
+    NAME          => 'Crypt::FNA',
+    AUTHOR        => q{Mario Rossano <software@netlogica.it>},
+    VERSION_FROM  => 'lib/Crypt/FNA.pm',
+    ABSTRACT      => 'FNA Fractal Numerical Algorithm for a new cryptography technology',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'perl')
       : ()),
